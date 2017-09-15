@@ -1,11 +1,11 @@
-CAUTION
-=======
+# CAUTION
+
 
 WORK IN PROGRESS!!!!
 
 <br/>
-Laptop
-===============
+# Laptop
+
 Laptop is a script to set up an macOS laptop/desktop for web and 
 mobile development. 
 
