@@ -8,7 +8,6 @@ common tools/apps used at the Telegraph
 
 WORK IN PROGRESS!!!!
 
-<br/>
 ## Laptop
 
 Laptop is a script to set up an macOS laptop/desktop for web and 
