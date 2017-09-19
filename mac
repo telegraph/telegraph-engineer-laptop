@@ -205,6 +205,17 @@ if [ -f "~/.gitignore_global" ]; then
   cp gitignore_global "$HOME/.gitignore_global"
 fi
 
+# Install Talisman, from Throughbot.  Adds a git hook to validate a change set 
+# to be pushed to a git repo, such as SSH keys, auth tokens, private keys etc.  
+# This is barebones install at the moment, but could be customised
+# Talisman is added as a git hook to all repos, so added to git-templates
+# Check to make sure there isnt already a pre-push hook
+echo "Installing Talisman as a pre-commit hook"
+if [ ! -f "$HOME/.git-templates/hooks/pre-push" ]; then 
+  curl https://thoughtworks.github.io/talisman/install.sh > install-talisman.sh
+  chmod +x install-talisman.sh
+  ./install-talisman.sh
+fi 
 
 #################################[ run customisations ]########################
 # run anything from the user local file
