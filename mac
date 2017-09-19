@@ -150,6 +150,73 @@ cask "postman"
 
 EOF
 
+##########################################[ Setup Git ]########################
+# setup git, but only if this is the first run
+# could extract this out for running later on an adhoc basis
+if [ ! -f "$HOME/.gitconfig" ]; then
+
+  echo "###### What is your Github username... #################################"
+    successfully read GITHUB_USERNAME
+  echo "###### What is the email you use with your Github account... ###########"
+    successfully read GITHUB_MAIL
+
+  echo "###### Checking for SSH key, generating one if it doesn't exist ...#####"
+    [[ -f ~/.ssh/id_rsa.pub ]] || ssh-keygen -t rsa -C "$GITHUB_MAIL" -f ~/.ssh/id_rsa
+  
+  echo "Copying public key to clipboard. Paste it into your Github account ..."
+    [[ -f ~/.ssh/id_rsa.pub ]] && cat ~/.ssh/id_rsa.pub | pbcopy
+    successfully open https://github.com/settings/ssh
+
+  echo "##### Setting git global defaults... ###################################"
+    git config --global user.name $GITHUB_USERNAME
+    git config --global user.email $GITHUB_MAIL
+    git config --global github.user $GITHUB_USERNAME
+    git config --global push.default simple   # current?
+    git config --global core.excludesfile $DIR/git/.gitignore_global
+    git config --global color.ui true
+    git config --global core.editor "subl -w"
+
+  echo "
+  ####################################################################################
+  Youe ssh credentials have been copied to you clipboard
+  Please paste them into Github before continuing.  
+  If you do not follow this step the script will fail and exit.
+  ####################################################################################
+  "
+  # Copies the contents of the id_rsa.pub file to your clipboard
+  pbcopy < ~/.ssh/id_rsa.pub
+  
+  # Wait for the user to confirm they've copied the key tp Github
+  echo "Continue? (y)es/(n)o"
+  successfully read "y"
+
+  echo "Accept Github fingerprint: (16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48)"
+  echo "Testing connection to Github"
+    ssh -T git@github.com
+
+else
+  echo "Git already setup"
+fi
+
+# check if there is a gitignore_global in the users home directory, and ignore
+# if it has been previously setup
+if [ -f "~/.gitignore_global" ]; then
+  echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
+  cp gitignore_global "$HOME/.gitignore_global"
+fi
+
+
+#################################[ run customisations ]########################
+# run anything from the user local file
+echo "Running customisations"
+echo "Checking preferences from $USER.local"
+if [ -f "$USER.local" ]; then
+  echo "Running your customizations from $USER.local ..."
+  # shellcheck disable=SC1090
+  . "$USER.local"
+fi
+
+
 ###########################################[ clean up ]########################
 echo "Cleaning up old Homebrew formulae ..."
 brew cleanup
