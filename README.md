@@ -152,7 +152,7 @@ It should take less than 15 minutes to install (depends on your machine).
 ## Talisman prepush hook
 Talisman validates the outgoing changeset for things that look suspicious - such 
 as authorization tokens and private keys.  
-This is installed after git is added bia homebrew and requires user interaction
+This is installed after git is added bia homebrew and requires user interaction.
 Please select (Y)es when prompted.  
 
 ## To Do Improvements
