@@ -157,3 +157,5 @@ without the check first.
 requiring git.  This would require a re-run to include customisations if the 
 user wanted them - a good reason to the script and localisations can be re-run
 safely.
+3. Add some CI and testing - this cannot be run in a Docker container as it is
+ mac specific
