@@ -1,0 +1,160 @@
+#!/bin/sh
+
+# Welcome to the telegraph developer machine setup script!
+# This is based heavily on the thoughbot laptop setup 
+# (https://github.com/thoughtbot/laptop)
+# and other setups.
+# See README for thanks and references
+
+successfully() {
+  $* || (echo "failed" 1>&2 && exit 1)
+}
+
+# shellcheck disable=SC2154
+trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
+
+set -e
+
+
+echo "
+#########################################################################
+Your password (assuming you are setup as an admin) is need to install the 
+latest Max OS updates and to ensure permssions on homebrew are setup 
+correctly.
+Please make sure you have read this script and are happy to provide 
+your password.
+#########################################################################
+"
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+#######################[ Update and install Mac Sw ]########################
+
+RUNNING_SYSTEM=`uname -s`
+# We're on a Mac, make sure the system is up to date, and install the 
+# command line tools
+if [ "$RUNNING_SYSTEM" == "Darwin" ]
+then
+
+  sudo softwareupdate -i -a
+
+  echo "Install Apple command line tools"
+  COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
+  if [ ! -d "$COMMANDLINE_TOOLS" ]; then
+    xcode-select --install
+  fi
+fi
+
+##################################[ Homebrew location ]########################
+# /usr/local is the supported location.  See homebrew docs for why.
+# Setup for individual users may work, but is not recommended
+HOMEBREW_PREFIX="/usr/local"
+
+if [ -d "$HOMEBREW_PREFIX" ]; then
+  if ! [ -r "$HOMEBREW_PREFIX" ]; then
+    sudo chown -R "$LOGNAME:admin" /usr/local
+  fi
+else
+  sudo mkdir "$HOMEBREW_PREFIX"
+  sudo chflags norestricted "$HOMEBREW_PREFIX"
+  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
+fi
+
+####################[ Install applications using brew ]########################
+if ! command -v brew >/dev/null; then
+  echo "Installing Homebrew ..."
+    curl -fsS \
+      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+
+fi
+
+if brew list | grep -Fq brew-cask; then
+  echo "Uninstalling old Homebrew-Cask ..."
+  brew uninstall --force brew-cask
+fi
+
+echo "Updating Homebrew formulae ..."
+brew update --force # https://github.com/Homebrew/brew/issues/1151
+brew bundle --file=- <<EOF
+tap "thoughtbot/formulae"
+tap "caskroom/cask"
+tap "homebrew/services"
+tap "universal-ctags/universal-ctags"
+
+# to upgrade all the apps installed by homebrew cask
+tap "buo/cask-upgrade"
+
+# Unix tools
+brew "universal-ctags", args: ["HEAD"]
+brew "git"
+brew "openssl"
+
+# GitHub
+brew "hub"
+
+# Programming language prerequisites and package managers
+brew "libyaml" # should come after openssl
+brew "coreutils"
+brew "yarn"
+
+# cask tools
+# cask "gpgtools"       # we use MacGPG2, so this is not required
+
+# need the latest version of java and maven
+# cask "java"             # not sure if this is needed, as the developer build has java 1.8 installed
+brew "maven"
+
+# Set applications directory - should be earlier?
+cask_args appdir: "/Applications"
+
+# programming editor
+cask "sublime-text"
+
+# IntelliJ community edition and professional version
+# professional version requires a licence, not setup with this script
+cask "intellij-idea-ce"
+cask "intellij-idea"
+
+# Git client
+cask "sourcetree"
+
+# docker - containerise all the things
+cask "docker"
+
+# UI for working with docker
+cask "kitematic"
+
+# video viewer
+cask "vlc"
+
+# slack - some people like to use the application
+cask "slack"
+
+# window management from the keyvoard
+cask "spectacle"
+
+# item
+cask "iterm2"
+
+# combine chat and messaging into one application (slack/whatsapp/etc)
+cask "franz"
+
+# mysql work bench
+cask "mysqlworkbench"
+
+# Postman - for API development and testing
+cask "postman"
+
+EOF
+
+###########################################[ clean up ]########################
+echo "Cleaning up old Homebrew formulae ..."
+brew cleanup
+brew cask cleanup
+
+echo "DONE!"
+
+exit
