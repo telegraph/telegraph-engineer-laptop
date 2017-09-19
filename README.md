@@ -150,6 +150,12 @@ The example file provides the following
 
 It should take less than 15 minutes to install (depends on your machine).
 
+## Talisman prepush hook
+Talisman validates the outgoing changeset for things that look suspicious - such 
+as authorization tokens and private keys.  
+This is installed after git is added bia homebrew and requires user interaction
+Please select (Y)es when prompted.  
+
 ## To Do Improvements
 1. Split out the git credentials into a separate file to allow it to be run 
 without the check first.  
@@ -158,4 +164,7 @@ requiring git.  This would require a re-run to include customisations if the
 user wanted them - a good reason to the script and localisations can be re-run
 safely.
 3. Add some CI and testing - this cannot be run in a Docker container as it is
- mac specific
+ mac specific.
+ 4. Automate the install of Talisman without requiring user input.  As the script 
+is written by Thoughtbot, and their install script is used as is and requires 
+user interation, this is left for another more ambitious contributor.

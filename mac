@@ -23,6 +23,7 @@ latest Max OS updates and to ensure permssions on homebrew are setup
 correctly.
 Please make sure you have read this script and are happy to provide 
 your password.
+Talisman prompts for input on first run, please answer yes
 #########################################################################
 "
 # Ask for the administrator password upfront
