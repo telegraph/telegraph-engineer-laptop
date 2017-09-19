@@ -31,7 +31,7 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-#######################[ Update and install Mac Sw ]########################
+##########################[ Update and install Mac Sw ]########################
 
 RUNNING_SYSTEM=`uname -s`
 # We're on a Mac, make sure the system is up to date, and install the 
@@ -178,7 +178,7 @@ if [ ! -f "$HOME/.gitconfig" ]; then
 
   echo "
   ####################################################################################
-  Youe ssh credentials have been copied to you clipboard
+  Your ssh credentials have been copied to you clipboard
   Please paste them into Github before continuing.  
   If you do not follow this step the script will fail and exit.
   ####################################################################################
@@ -212,9 +212,13 @@ fi
 # Check to make sure there isnt already a pre-push hook
 echo "Installing Talisman as a pre-commit hook"
 if [ ! -f "$HOME/.git-templates/hooks/pre-push" ]; then 
-  curl https://thoughtworks.github.io/talisman/install.sh > install-talisman.sh
+  curl https://thoughtworks.github.io/talisman/install.sh > "$HOME/install-talisman.sh"
+  # The talisman script checks the local .git/hooks repo first to see if it is 
+  # installed.  Force the check to run from the users home folder, but CD'ing to it
+  cd $HOME
   chmod +x install-talisman.sh
   ./install-talisman.sh
+  rm install-talisman.sh
 fi 
 
 #################################[ run customisations ]########################
