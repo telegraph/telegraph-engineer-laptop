@@ -1,4 +1,4 @@
-# Laptop develompent setup script
+# Laptop development setup script
 Sets up a newly imaged Mac for development, quickly using 
 common tools/apps used at the Telegraph
 
@@ -10,7 +10,7 @@ WORK IN PROGRESS!!!!
 
 ## Laptop
 
-Laptop is a script to set up an macOS laptop/desktop for web and 
+Telegraph-engineer-laptop is a script to set up an macOS laptop/desktop for web and 
 mobile development. 
 
 It can be run multiple times on the same machine safely.
@@ -43,7 +43,7 @@ The ideas are borrowed from the following sources -
 
 Clone the repo to a location on your machine
 
-	git clone git://github.com/telegraph/laptop.git ~/laptop 
+	git clone git://github.com/telegraph/telegraph-engineer-laptop.git ~/laptop 
 	cd ~/laptop 
 
 Rename (or copy) {USER}.local to *YOUR* user name. ie. bobs.local
