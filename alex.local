@@ -1,0 +1,106 @@
+#!/bin/sh
+# PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin
+
+echo "Checking preferences from $USER.local"
+
+#########################################[ OH MY ZSH ]########################
+# Assumes you want ZSH and not BASH
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+	echo "Setup oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
+
+# useful for updating zshrc without duplicating entries
+append_to_zshrc() {
+  local text="$1" zshrc
+  local skip_new_line="${2:-0}"
+
+  if [ -w "$HOME/.zshrc.local" ]; then
+    zshrc="$HOME/.zshrc.local"
+  else
+    zshrc="$HOME/.zshrc"
+  fi
+
+  if ! grep -Fqs "$text" "$zshrc"; then
+    if [ "$skip_new_line" -eq 1 ]; then
+      printf "%s\n" "$text" >> "$zshrc"
+    else
+      printf "\n%s\n" "$text" >> "$zshrc"
+    fi
+  fi
+}
+
+###############################[ user specific apps ]########################
+
+# apps for specific user
+brew bundle --file=- <<EOF
+brew "go"
+brew "vim"
+
+# Image manipulation
+brew "imagemagick"
+
+# UI to manage the Jetbrains IDE suite
+cask "jetbrains-toolbox"
+
+# Free programming editors
+cask "visual-studio-code"
+cask "atom"
+
+# MacVim - because I like it
+cask "macvim"
+
+
+# For AEM development
+cask "Brackets"
+
+# Browsers
+cask "google-chrome"
+cask "firefox"
+
+EOF
+
+###################################[ version manager ]########################
+echo "Configuring asdf version manager..."
+if [ ! -d "$HOME/.asdf" ]; then
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
+  append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
+fi
+
+install_asdf_plugin() {
+  local name="$1"
+  local url="$2"
+
+  if ! asdf plugin-list | grep -Fq "$name"; then
+    asdf plugin-add "$name" "$url"
+  fi
+}
+
+# shellcheck disable=SC1090
+source "$HOME/.asdf/asdf.sh"
+install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
+
+install_asdf_language() {
+  local language="$1"
+  local version
+  version="$(asdf list-all "$language" | tail -1)"
+
+  if ! asdf list "$language" | grep -Fq "$version"; then
+    asdf install "$language" "$version"
+    asdf global "$language" "$version"
+  fi
+}
+
+echo "Installing latest Node..."
+bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
+install_asdf_language "nodejs"
+
+
+#################################[ osx customisations ]########################
+# run anything from the user local file
+echo "Running OSX customisations"
+if [ -f "osx-customisations.sh" ]; then
+  echo "Running your customizations from osx-customisations.sh ..."
+  # shellcheck disable=SC1090
+  . "osx-customisations.sh"
+fi
