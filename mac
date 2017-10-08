@@ -102,10 +102,10 @@ brew "coreutils"
 brew "yarn"
 
 # cask tools
-# cask "gpgtools"       # we use MacGPG2, so this is not required
+cask "gpgtools"       # we use MacGPG2, so this is not required
 
 # need the latest version of java and maven
-# cask "java"             # not sure if this is needed, as the developer build has java 1.8 installed
+cask "java"             # not sure if this is needed, as the developer build has java 1.8 installed
 brew "maven"
 
 # Set applications directory - should be earlier?
