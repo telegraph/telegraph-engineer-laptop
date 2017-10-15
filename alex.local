@@ -79,6 +79,8 @@ cask "libreoffice"
 
 cask "bettertouchtool"
 
+brew "libpng"
+
 EOF
 
 mas install 1278508951 	# trello
