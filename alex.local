@@ -58,7 +58,30 @@ cask "Brackets"
 cask "google-chrome"
 cask "firefox"
 
+# VM
+cask "vmware-fusion"
+
+# useful utils
+cask "dropbox"
+
+# mac app store command line interface
+brew "mas"
+
+cask "kindle"
+
 EOF
+
+mas install 1278508951 	# trello
+mas install 803453959 	# slack
+mas install 824183456 	# affinity photo
+mas install 409183694 	# keynote
+mas install 409203825	# numbers
+mas install 409201541	# pages
+mas install 736189492	# notability
+mas install 568494494	# pocket
+mas install 417375580	# bettersnaptool
+mas install 784801555	# onenote
+mas install 407963104	# pixelmator
 
 ###################################[ version manager ]########################
 echo "Configuring asdf version manager..."
@@ -95,6 +118,21 @@ echo "Installing latest Node..."
 bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
 install_asdf_language "nodejs"
 
+
+gem_install_or_update() {
+  if gem list "$1" --installed > /dev/null; then
+    gem update "$@"
+  else
+    gem install "$@"
+  fi
+}
+
+echo "Installing latest Ruby..."
+install_asdf_language "ruby"
+gem update --system
+gem_install_or_update "bundler"
+number_of_cores=$(sysctl -n hw.ncpu)
+bundle config --global jobs $((number_of_cores - 1))
 
 #################################[ osx customisations ]########################
 # run anything from the user local file
