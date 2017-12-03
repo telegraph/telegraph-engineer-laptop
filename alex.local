@@ -69,6 +69,18 @@ brew "mas"
 
 cask "kindle"
 
+# programming languages and things
+brew "cmake"
+brew "python3"
+brew "ruby-build"
+brew "gradle"
+brew "zsh" 
+cask "libreoffice"
+
+cask "bettertouchtool"
+
+brew "libpng"
+
 EOF
 
 mas install 1278508951 	# trello
