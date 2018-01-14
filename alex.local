@@ -81,6 +81,17 @@ cask "bettertouchtool"
 
 brew "libpng"
 
+# search tools
+# the platinum searcher - supposedly facter than the silver searcher
+brew "pt"
+# rip grep - written in rust and really fast
+brew "ripgrep"
+# sift written in go
+brew "go"
+
+# hide menu items
+brew "vanilla"
+
 EOF
 
 mas install 1278508951 	# trello
