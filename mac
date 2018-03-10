@@ -84,9 +84,13 @@ tap "thoughtbot/formulae"
 tap "caskroom/cask"
 tap "homebrew/services"
 tap "universal-ctags/universal-ctags"
+tap "caskroom/versions"     # for java 1.8
 
 # to upgrade all the apps installed by homebrew cask
 tap "buo/cask-upgrade"
+
+# Set applications directory
+cask_args appdir: "/Applications"
 
 # Unix tools
 brew "universal-ctags", args: ["HEAD"]
@@ -105,19 +109,14 @@ brew "yarn"
 cask "gpgtools"       # we use MacGPG2, so this is not required
 
 # need the latest version of java and maven
-cask "java"             # not sure if this is needed, as the developer build has java 1.8 installed
+cask "java8"             # specific version of java
 brew "maven"
-
-# Set applications directory - should be earlier?
-cask_args appdir: "/Applications"
 
 # programming editor
 cask "sublime-text"
 
-# IntelliJ community edition and professional version
-# professional version requires a licence, not setup with this script
-cask "intellij-idea-ce"
-cask "intellij-idea"
+# manage jetbrains IDEs with their toolbox
+cask "jetbrains-toolbox"
 
 # Git client
 cask "sourcetree"
