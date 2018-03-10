@@ -3,14 +3,7 @@
 
 echo "Checking preferences from $USER.local"
 
-local asdf_version_manager="$1"
-
-#########################################[ OH MY ZSH ]########################
-# Assumes you want ZSH and not BASH
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-	echo "Setup oh-my-zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
+# asdf_version_manager=FALSE
 
 # useful for updating zshrc without duplicating entries
 append_to_zshrc() {
@@ -197,6 +190,13 @@ brew "node"
 brew "ruby"
 EOF 
 
+fi
+
+#########################################[ OH MY ZSH ]########################
+# Assumes you want ZSH and not BASH
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+	echo "Setup oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
 #################################[ osx customisations ]########################
