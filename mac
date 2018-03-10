@@ -32,6 +32,9 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 ##########################[ Update and install Mac Sw ]########################
 
 RUNNING_SYSTEM=`uname -s`
