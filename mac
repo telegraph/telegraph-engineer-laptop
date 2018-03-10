@@ -106,7 +106,7 @@ brew "coreutils"
 brew "yarn"
 
 # cask tools
-cask "gpgtools"       # we use MacGPG2, so this is not required
+cask "gpg-suite"       # we use MacGPG2, so this is not required
 
 # need the latest version of java and maven
 cask "java8"             # specific version of java
