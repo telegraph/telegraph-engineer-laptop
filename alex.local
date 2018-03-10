@@ -3,6 +3,8 @@
 
 echo "Checking preferences from $USER.local"
 
+local asdf_version_manager="$1"
+
 #########################################[ OH MY ZSH ]########################
 # Assumes you want ZSH and not BASH
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -36,6 +38,10 @@ append_to_zshrc() {
 brew bundle --file=- <<EOF
 brew "go"
 brew "vim"
+brew "macvim"
+
+# vpn
+cask "tunnelbear"
 
 # Image manipulation
 brew "imagemagick"
@@ -46,20 +52,16 @@ cask "jetbrains-toolbox"
 # Free programming editors
 cask "visual-studio-code"
 cask "atom"
-
-# MacVim - because I like it
-cask "macvim"
-
-
-# For AEM development
-cask "Brackets"
+cask "textmate"
 
 # Browsers
 cask "google-chrome"
 cask "firefox"
 
 # VM
-cask "vmware-fusion"
+cask "vmware-fusion8"
+
+cask "android-studio"
 
 # useful utils
 cask "dropbox"
@@ -69,6 +71,7 @@ brew "mas"
 
 cask "kindle"
 
+cask "genymotion"
 # programming languages and things
 brew "cmake"
 brew "python3"
@@ -82,15 +85,39 @@ cask "bettertouchtool"
 brew "libpng"
 
 # search tools
-# the platinum searcher - supposedly facter than the silver searcher
+# the platinum searcher - supposedly faster than the silver searcher
 brew "pt"
 # rip grep - written in rust and really fast
 brew "ripgrep"
 # sift written in go
 brew "go"
 
+
+# install brackets, and eclipse, for AEM use
+cask "brackets"
+cask "eclipse-jee"
+
+# google drive for syncing
+#cask "google-backup-and-sync"
+
 # hide menu items
-brew "vanilla"
+# cask "vanilla"
+
+# libreoffice - open source office
+cask "libreoffice"
+
+# swagger codegenerator
+brew "swagger-codegen"
+
+# cocoapods and the mac app for it
+brew "cocoapods"
+cask "cocoapods-app"
+
+# music
+cask "spotify"
+
+# BBC iPlayer
+cask "bbc-iplayer-downloads"
 
 EOF
 
@@ -98,64 +125,79 @@ mas install 1278508951 	# trello
 mas install 803453959 	# slack
 mas install 824183456 	# affinity photo
 mas install 409183694 	# keynote
-mas install 409203825	# numbers
-mas install 409201541	# pages
-mas install 736189492	# notability
-mas install 568494494	# pocket
-mas install 417375580	# bettersnaptool
-mas install 784801555	# onenote
-mas install 407963104	# pixelmator
+mas install 409203825	  # numbers
+mas install 409201541	  # pages
+mas install 736189492	  # notability
+mas install 568494494	  # pocket
+mas install 417375580	  # bettersnaptool
+mas install 784801555	  # onenote
+mas install 407963104	  # pixelmator
+mas install 442168834   # sitesucker
+mas install 926036361   # lastpass - could use homebrew...
+mas install 497799835   # xcode
+
+
+#exit
 
 ###################################[ version manager ]########################
-echo "Configuring asdf version manager..."
-if [ ! -d "$HOME/.asdf" ]; then
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
-  append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
+if [ "$asdf_version_manager" = "use_asdf" ]; then
+  echo "Configuring asdf version manager..."
+  if [ ! -d "$HOME/.asdf" ]; then
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
+    append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
+  fi
+
+  install_asdf_plugin() {
+    local name="$1"
+    local url="$2"
+
+    if ! asdf plugin-list | grep -Fq "$name"; then
+      asdf plugin-add "$name" "$url"
+    fi
+  }
+
+  # shellcheck disable=SC1090
+  source "$HOME/.asdf/asdf.sh"
+  install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
+
+  install_asdf_language() {
+    local language="$1"
+    local version
+    version="$(asdf list-all "$language" | tail -1)"
+
+    if ! asdf list "$language" | grep -Fq "$version"; then
+      asdf install "$language" "$version"
+      asdf global "$language" "$version"
+    fi
+  }
+
+  echo "Installing latest Node..."
+  bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
+  install_asdf_language "nodejs"
+
+
+  gem_install_or_update() {
+    if gem list "$1" --installed > /dev/null; then
+      gem update "$@"
+    else
+      gem install "$@"
+    fi
+  }
+
+  echo "Installing latest Ruby..."
+  install_asdf_language "ruby"
+  gem update --system
+  gem_install_or_update "bundler"
+  number_of_cores=$(sysctl -n hw.ncpu)
+  bundle config --global jobs $((number_of_cores - 1))
+
+else
+brew bundle --file=- <<EOF
+brew "node"
+brew "ruby"
+EOF 
+
 fi
-
-install_asdf_plugin() {
-  local name="$1"
-  local url="$2"
-
-  if ! asdf plugin-list | grep -Fq "$name"; then
-    asdf plugin-add "$name" "$url"
-  fi
-}
-
-# shellcheck disable=SC1090
-source "$HOME/.asdf/asdf.sh"
-install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
-
-install_asdf_language() {
-  local language="$1"
-  local version
-  version="$(asdf list-all "$language" | tail -1)"
-
-  if ! asdf list "$language" | grep -Fq "$version"; then
-    asdf install "$language" "$version"
-    asdf global "$language" "$version"
-  fi
-}
-
-echo "Installing latest Node..."
-bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-install_asdf_language "nodejs"
-
-
-gem_install_or_update() {
-  if gem list "$1" --installed > /dev/null; then
-    gem update "$@"
-  else
-    gem install "$@"
-  fi
-}
-
-echo "Installing latest Ruby..."
-install_asdf_language "ruby"
-gem update --system
-gem_install_or_update "bundler"
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
 
 #################################[ osx customisations ]########################
 # run anything from the user local file
