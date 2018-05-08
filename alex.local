@@ -3,7 +3,7 @@
 
 echo "Checking preferences from $USER.local"
 
-# asdf_version_manager=FALSE
+asdf_version_manager=FALSE
 
 # useful for updating zshrc without duplicating entries
 append_to_zshrc() {
