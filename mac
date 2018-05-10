@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Get the current path - used to include other files 
+ABS_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+echo "Working path $ABS_PATH"
+
+
 # Welcome to the telegraph developer machine setup script!
 # This is based heavily on the thoughbot laptop setup 
 # (https://github.com/thoughtbot/laptop)
@@ -31,6 +36,92 @@ sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+
+##########################################[ Setup Git ]########################
+# setup git, but only if this is the first run
+# could extract this out for running later on an adhoc basis
+# do this first (even with the stock install of git) so the user does not need
+# to sit waiting for the script to complete
+if [ ! -f "$HOME/.gitconfig" ]; then
+
+  if [ -f "$ABS_PATH/settings.env" ]; then
+    echo "Importing settings from settings.env ..."
+    
+    source $ABS_PATH/settings.env
+
+    echo "###### Using $GITHUB_USERNAME for your github username ##################"
+    echo "###### Using $GITHUB_MAIL for your github email #########################"
+    
+  else
+
+    echo "###### What is your Github username... #################################"
+      successfully read GITHUB_USERNAME
+    echo "###### What is the email you use with your Github account... ###########"
+      successfully read GITHUB_MAIL
+
+  fi
+
+  echo "###### Checking for SSH key, generating one if it doesn't exist ...#####"
+    [[ -f ~/.ssh/id_rsa.pub ]] || ssh-keygen -t rsa -C "$GITHUB_MAIL" -f ~/.ssh/id_rsa
+  
+  echo "Copying public key to clipboard. Paste it into your Github account ..."
+    [[ -f ~/.ssh/id_rsa.pub ]] && cat ~/.ssh/id_rsa.pub | pbcopy
+    successfully open https://github.com/settings/ssh
+
+  echo "##### Setting git global defaults... ###################################"
+    git config --global user.name $GITHUB_USERNAME
+    git config --global user.email $GITHUB_MAIL
+    git config --global github.user $GITHUB_USERNAME
+    git config --global push.default simple   # current?
+    git config --global core.excludesfile $DIR/git/.gitignore_global
+    git config --global color.ui true
+    git config --global core.editor "subl -w"
+
+  echo "
+  ####################################################################################
+  Your ssh credentials have been copied to you clipboard
+  Please paste them into Github before continuing.  
+  If you do not follow this step the script will fail and exit.
+  ####################################################################################
+  "
+  # Copies the contents of the id_rsa.pub file to your clipboard
+  pbcopy < ~/.ssh/id_rsa.pub
+  
+  # Wait for the user to confirm they've copied the key tp Github
+  echo "Continue? (y)es/(n)o"
+  successfully read "y"
+
+  echo "Testing connection to Github"
+  echo "Accept Github fingerprint: (16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48)"
+
+  # # get the error message back from git to see it the setup was ok
+  # errormessage=`ssh -T git@github.com 2>&1 `
+  # if [ "$errormessage" = "Hi $GITHUB_USERNAME! You've successfully authenticated, but GitHub does not provide shell access." ]; then
+  #   echo "Successfully setup github access with your credentials"
+  # else
+  #   echo "You will need to revisit the github setup"
+  # fi
+  # echo $errormessage
+
+  # Disable exit on non 0, check the access and re-enable exit on non 0.  the ablove does not work...
+  set +e
+  errormessage=`ssh -T git@github.com 2>&1 `
+  echo $errormessage
+  set -e
+
+else
+
+  echo "Git already setup"
+
+fi
+
+# check if there is a gitignore_global in the users home directory, and ignore
+# if it has been previously setup
+if [ -f "~/.gitignore_global" ]; then
+  echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
+  cp gitignore_global "$HOME/.gitignore_global"
+fi
 
 ##########################[ Update and install Mac Sw ]########################
 
@@ -79,6 +170,7 @@ fi
 
 echo "Updating Homebrew formulae ..."
 brew update --force # https://github.com/Homebrew/brew/issues/1151
+
 brew bundle --file=- <<EOF
 tap "thoughtbot/formulae"
 tap "caskroom/cask"
@@ -101,22 +193,19 @@ brew "openssl"
 brew "hub"
 
 # Programming language prerequisites and package managers
-brew "libyaml" # should come after openssl
+brew "libyaml"              # should come after openssl
 brew "coreutils"
 brew "yarn"
 
-# cask tools
-cask "gpg-suite"       # we use MacGPG2, so this is not required
-
 # need the latest version of java and maven
-cask "java8"             # specific version of java
+cask "java8"                # specific version of java
 brew "maven"
 
 # programming editor
 cask "sublime-text"
 
 # manage jetbrains IDEs with their toolbox
-cask "jetbrains-toolbox"
+# cask "intellij-idea"
 
 # Git client
 cask "sourcetree"
@@ -130,7 +219,7 @@ cask "kitematic"
 # video viewer
 cask "vlc"
 
-# slack - some people like to use the application
+# slack
 cask "slack"
 
 # window management from the keyvoard
@@ -144,66 +233,12 @@ cask "franz"
 
 # mysql work bench
 cask "mysqlworkbench"
+cask "sequel-pro"
 
 # Postman - for API development and testing
 cask "postman"
 
 EOF
-
-##########################################[ Setup Git ]########################
-# setup git, but only if this is the first run
-# could extract this out for running later on an adhoc basis
-if [ ! -f "$HOME/.gitconfig" ]; then
-
-  echo "###### What is your Github username... #################################"
-    successfully read GITHUB_USERNAME
-  echo "###### What is the email you use with your Github account... ###########"
-    successfully read GITHUB_MAIL
-
-  echo "###### Checking for SSH key, generating one if it doesn't exist ...#####"
-    [[ -f ~/.ssh/id_rsa.pub ]] || ssh-keygen -t rsa -C "$GITHUB_MAIL" -f ~/.ssh/id_rsa
-  
-  echo "Copying public key to clipboard. Paste it into your Github account ..."
-    [[ -f ~/.ssh/id_rsa.pub ]] && cat ~/.ssh/id_rsa.pub | pbcopy
-    successfully open https://github.com/settings/ssh
-
-  echo "##### Setting git global defaults... ###################################"
-    git config --global user.name $GITHUB_USERNAME
-    git config --global user.email $GITHUB_MAIL
-    git config --global github.user $GITHUB_USERNAME
-    git config --global push.default simple   # current?
-    git config --global core.excludesfile $DIR/git/.gitignore_global
-    git config --global color.ui true
-    git config --global core.editor "subl -w"
-
-  echo "
-  ####################################################################################
-  Your ssh credentials have been copied to you clipboard
-  Please paste them into Github before continuing.  
-  If you do not follow this step the script will fail and exit.
-  ####################################################################################
-  "
-  # Copies the contents of the id_rsa.pub file to your clipboard
-  pbcopy < ~/.ssh/id_rsa.pub
-  
-  # Wait for the user to confirm they've copied the key tp Github
-  echo "Continue? (y)es/(n)o"
-  successfully read "y"
-
-  echo "Accept Github fingerprint: (16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48)"
-  echo "Testing connection to Github"
-    ssh -T git@github.com
-
-else
-  echo "Git already setup"
-fi
-
-# check if there is a gitignore_global in the users home directory, and ignore
-# if it has been previously setup
-if [ -f "~/.gitignore_global" ]; then
-  echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
-  cp gitignore_global "$HOME/.gitignore_global"
-fi
 
 # Install Talisman, from Throughbot.  Adds a git hook to validate a change set 
 # to be pushed to a git repo, such as SSH keys, auth tokens, private keys etc.  

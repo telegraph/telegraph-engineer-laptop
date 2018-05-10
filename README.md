@@ -5,7 +5,6 @@ common tools/apps used at the Telegraph
 
 ## CAUTION
 
-
 WORK IN PROGRESS!!!!
 
 ## Laptop
@@ -21,8 +20,7 @@ on the machine.
 * This script *must* be run under the developers account and *not* the TMG admin account 
 as customisations are based on the developer "user" setup on the machine
 
-* Developers requiring XCode must install XCode from the App store, XCode 
-cannot be installed with this script
+* Developers requiring XCode must install XCode from the App store, which requires logging in to the App store
 
 ## Attribution and thanks
 The ideas are borrowed from the following sources -
@@ -49,6 +47,11 @@ Clone the repo to a location on your machine
 Rename (or copy) {USER}.local to *YOUR* user name. ie. bobs.local
       
       mv {USER}.local bobs.local
+
+
+Edit the settings.env file to add your git credentials, the name of your machine
+(assuming you want to change it) the timezone, the host name etd
+	
 
 Run the main script (make sure you read it first.)
 
