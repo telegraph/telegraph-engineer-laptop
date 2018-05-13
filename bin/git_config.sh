@@ -90,7 +90,7 @@ fi
 # if it has been previously setup, otherwise setup some sensible defaults
 if [ -f "~/.gitignore_global" ]; then
   fancy_echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
-  cp gitignore_global "$HOME/.gitignore_global"
+  cp "${CONFIG_PATH}/gitignore_global" "$HOME/.gitignore_global"
 fi
 
 
