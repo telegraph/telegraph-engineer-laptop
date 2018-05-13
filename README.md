@@ -43,7 +43,7 @@ Important scripts and files -
 * **bootstrap.sh**: Main script - should only be run once
 * **mac.sh - list of applications to install
 * **bin/*.sh**: Scripts that will be run, depending on OS and can be used for customising your build
-* **config/settings.env: Configuration for github
+* **config/settings: Configuration for github, and your machine (assuming is has not been setup by yourself)
 
 ## Remember 
 
@@ -62,7 +62,7 @@ Rename (or copy) {USER}.local to *YOUR* user name. ie. bobs.local
       
       mv {USER}.local bobs.local
       
-Edit the config/settings.env file to add your github credentials.  If your machine has not been
+Edit the config/settings file to add your github credentials.  If your machine has not been
 cloned by your systems admin, and you want to use this to setup your machine, uncomment the 
 machine settings and edit to your liking
 
