@@ -52,8 +52,8 @@ EOF
 ###################################[ version manager ]########################
 echo "Configuring asdf version manager..."
 if [ ! -d "$HOME/.asdf" ]; then
-  gt clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
-  ppend_to_zshrc "source $HOME/.asdf/asdf.sh" 1
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
+  append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
 fi
 
 install_asdf_plugin() {
