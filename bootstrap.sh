@@ -3,16 +3,16 @@
 # import the functions
 source bin/functions.sh
 
-fancy_echo "########################################################"
-fancy_echo " This is the bootstap script to setup your mac as a     "
-fancy_echo " development machine, to get you running asap           "
-fancy_echo " This is going to ask for your password.  Only provide  "
-fancy_echo " it if you have read this script and fully understand 	"
-fancy_echo " what is it going to do to your sytem										"
-fancy_echo "																												"
-fancy_echo " **************** YOU HAVE BEEN WARNED	****************"
-fancy_echo "																												"
-fancy_echo "########################################################"
+fancy_echo "##################################################################"
+fancy_echo "       This is the bootstap script to setup your mac as a         "
+fancy_echo "       development machine, to get you running asap               "
+fancy_echo "       This is going to ask for your password.  Only provide      "
+fancy_echo "       it if you have read this script and fully understand 	    "
+fancy_echo "       what is it going to do to your sytem										    "
+fancy_echo "			     																									      "
+fancy_echo "     **************** YOU HAVE BEEN WARNED	*****************     "
+fancy_echo "																												          "
+fancy_echo "##################################################################"
 
 
 # shellcheck disable=SC2154
