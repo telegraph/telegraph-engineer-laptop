@@ -87,6 +87,7 @@ brew bundle --file=- <<EOF
   cask "intellij-idea"    # manage jetbrains IDEs with their toolbox
   cask "sourcetree"       # Git client
   cask "docker"           # docker - containerise all the things
+  cask "kitematic"        # UI for working with docker
   cask "iterm2"           # item - terminal alternative 
   cask "mysqlworkbench"   # mysql work bench
   cask "sequel-pro"       # ui for database management
@@ -108,4 +109,3 @@ EOF
 
 brew cleanup --force
 rm -f -r /Library/Caches/Homebrew/*
-
