@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# Get the current path - used to include other files 
+SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+echo "Working path $SCRIPT_PATH"
+source "$SCRIPT_PATH/bin/functions.sh"
+
+RUNNING_SYSTEM=`uname -s`
+# We're on a Mac, make sure the system is up to date, and install the 
+# command line tools
+if ! [ "$RUNNING_SYSTEM" == "Darwin" ]
+then
+  fancy_echo "You do not appear to be running macOS                           "
+  fancy_echo "Perhaps you where looking for the linux version?                "
+  fancy_echo "If so, then may I suggest considering at the linux.sh script ?  "
+  exit -1
+fi
+
+########################[ Check homebrew is installed ]########################
+# Set the install location for homebrew... use the default.
+HOMEBREW_PREFIX="/usr/local"
+
+if [ -d "$HOMEBREW_PREFIX" ]; then
+  if ! [ -r "$HOMEBREW_PREFIX" ]; then
+    sudo chown -R "$LOGNAME:admin" /usr/local
+  fi
+else
+  sudo mkdir "$HOMEBREW_PREFIX"
+  sudo chflags norestricted "$HOMEBREW_PREFIX"
+  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
+fi
+
+# Check to see if homebrew is installed, and if not then install it
+if ! command -v brew >/dev/null; then
+  fancy_echo "Installing Homebrew ..."
+    curl -fsS \
+      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+
+    export PATH="/usr/local/bin:$PATH"
+fi
+
+if brew list | grep -Fq brew-cask; then
+  fancy_echo "Uninstalling old Homebrew-Cask ..."
+  brew uninstall --force brew-cask
+fi
+
+########################[ Install homebrew apps ]##############################
+fancy_echo "Updating Homebrew formulae ..."
+brew update --force # https://github.com/Homebrew/brew/issues/1151
+fancy_echo "Updated forcefully"
+
+
+# generic apps for all engineers
+if brew bundle --file="$CONFIG_PATH/Brewfile"; then
+  echo "All items in Brewfile were installed successfully."
+else
+  echo "Some items in Brewfile were not installed successfully."
+fi
+
+brew cleanup --force
+rm -f -r /Library/Caches/Homebrew/*
