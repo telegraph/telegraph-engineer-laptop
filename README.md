@@ -34,6 +34,9 @@ The ideas are borrowed from the following sources -
 * https://github.com/skwp/dotfiles
 * https://github.com/joshukraine/mac-bootstrap
 
+Important scripts and files -
+* **bin/*.sh**: Scripts that will be run, depending on OS and can be used for customising your build
+* **config/settings: Configuration for github, and your machine (assuming is has not been setup by yourself)
 
 ## Remember 
 
