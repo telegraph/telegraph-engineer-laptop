@@ -1,23 +1,35 @@
-#!/bin/sh
+#!/bin/bash
 
-# Get the current path - used to include other files 
-ABS_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-echo "Working path $ABS_PATH"
+# Get the some path - used to include other files 
+SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+PARENT_PATH=`dirname "$SCRIPT_PATH"`
+CONFIG_PATH="$PARENT_PATH/config"
+BIN_PATH="$PARENT_PATH/bin"
 
+# set some vars to references from one place
+FUNCTIONS="$BIN_PATH/functions.sh"
+BREWFILE="$CONFIG_PATH/Brewfile"
 
-# Welcome to the telegraph developer machine setup script!
-# This is based heavily on the thoughbot laptop setup 
-# (https://github.com/thoughtbot/laptop)
-# and other setups.
-# See README for thanks and references
+# import the functions
+source "$FUNCTIONS"
 
-successfully() {
-  $* || (echo "failed" 1>&2 && exit 1)
-}
+fancy_echo "##################################################################"
+fancy_echo "       This is the bootstap script to setup your mac as a         "
+fancy_echo "       development machine, to get you running asap               "
+fancy_echo "       This is going to ask for your password.  Only provide      "
+fancy_echo "       it if you have read this script and fully understand 	    "
+fancy_echo "       what is it going to do to your sytem										    "
+fancy_echo "			     																									      "
+fancy_echo "     **************** YOU HAVE BEEN WARNED	*****************     "
+fancy_echo "																												          "
+fancy_echo "##################################################################"
+
 
 # shellcheck disable=SC2154
+# Print out the failure when exiting the script
 trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 
+# exit if there is an error
 set -e
 
 
@@ -34,244 +46,102 @@ Talisman prompts for input on first run, please answer yes
 # Ask for the administrator password upfront
 sudo -v
 
-# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
-while true; do sudo -n true; sudoleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+# Keep-alive: update existing `sudo` time stamp until the script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-
-##########################################[ Setup Git ]########################
-# setup git, but only if this is the first run
-# could extract this out for running later on an adhoc basis
-# do this first (even with the stock install of git) so the user does not need
-# to sit waiting for the script to complete
-if [ ! -f "$HOME/.gitconfig" ]; then
-
-  if [ -f "$ABS_PATH/settings.env" ]; then
-    echo "Importing settings from settings.env ..."
-    
-    source $ABS_PATH/settings.env
-
-    echo "###### Using $GITHUB_USERNAME for your github username ##################"
-    echo "###### Using $GITHUB_MAIL for your github email #########################"
-    
-  else
-
-    echo "###### What is your Github username... #################################"
-      successfully read GITHUB_USERNAME
-    echo "###### What is the email you use with your Github account... ###########"
-      successfully read GITHUB_MAIL
-
-  fi
-
-  echo "###### Checking for SSH key, generating one if it doesn't exist ...#####"
-    [[ -f ~/.ssh/id_rsa.pub ]] || ssh-keygen -t rsa -C "$GITHUB_MAIL" -f ~/.ssh/id_rsa
-  
-  echo "Copying public key to clipboard. Paste it into your Github account ..."
-    [[ -f ~/.ssh/id_rsa.pub ]] && cat ~/.ssh/id_rsa.pub | pbcopy
-    successfully open https://github.com/settings/ssh
-
-  echo "##### Setting git global defaults... ###################################"
-    git config --global user.name $GITHUB_USERNAME
-    git config --global user.email $GITHUB_MAIL
-    git config --global github.user $GITHUB_USERNAME
-    git config --global push.default simple   # current?
-    git config --global core.excludesfile $DIR/git/.gitignore_global
-    git config --global color.ui true
-    git config --global core.editor "subl -w"
-
-  echo "
-  ####################################################################################
-  Your ssh credentials have been copied to you clipboard
-  Please paste them into Github before continuing.  
-  If you do not follow this step the script will fail and exit.
-  ####################################################################################
-  "
-  # Copies the contents of the id_rsa.pub file to your clipboard
-  pbcopy < ~/.ssh/id_rsa.pub
-  
-  # Wait for the user to confirm they've copied the key tp Github
-  echo "Continue? (y)es/(n)o"
-  successfully read "y"
-
-  echo "Testing connection to Github"
-  echo "Accept Github fingerprint: (16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48)"
-
-  # # get the error message back from git to see it the setup was ok
-  # errormessage=`ssh -T git@github.com 2>&1 `
-  # if [ "$errormessage" = "Hi $GITHUB_USERNAME! You've successfully authenticated, but GitHub does not provide shell access." ]; then
-  #   echo "Successfully setup github access with your credentials"
-  # else
-  #   echo "You will need to revisit the github setup"
-  # fi
-  # echo $errormessage
-
-  # Disable exit on non 0, check the access and re-enable exit on non 0.  the ablove does not work...
-  set +e
-  errormessage=`ssh -T git@github.com 2>&1 `
-  echo $errormessage
-  set -e
-
-else
-
-  echo "Git already setup"
-
-fi
-
-# check if there is a gitignore_global in the users home directory, and ignore
-# if it has been previously setup
-if [ -f "~/.gitignore_global" ]; then
-  echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
-  cp gitignore_global "$HOME/.gitignore_global"
-fi
-
-##########################[ Update and install Mac Sw ]########################
-
+########################[ INSTALL depending on OS ]############################
 RUNNING_SYSTEM=`uname -s`
-# We're on a Mac, make sure the system is up to date, and install the 
-# command line tools
+
+# We're on a Mac, let's install and setup using homebrew.
 if [ "$RUNNING_SYSTEM" == "Darwin" ]
 then
 
-  sudo softwareupdate -i -a
+########################[ Updating Mac OS ]####################################
+# Update mac software
+	fancy_echo "Updating mac os"
+		sudo softwareupdate -i -a
 
-  echo "Install Apple command line tools"
-  COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
-  if [ ! -d "$COMMANDLINE_TOOLS" ]; then
-    xcode-select --install
-  fi
-fi
+########################[ Command line xcode ]#################################
+	fancy_echo "Install Apple command line tools"
+	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
+	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
+		xcode-select --install
+	fi
 
-##################################[ Homebrew location ]########################
-# /usr/local is the supported location.  See homebrew docs for why.
-# Setup for individual users may work, but is not recommended
-HOMEBREW_PREFIX="/usr/local"
 
-if [ -d "$HOMEBREW_PREFIX" ]; then
-  if ! [ -r "$HOMEBREW_PREFIX" ]; then
-    sudo chown -R "$LOGNAME:admin" /usr/local
-  fi
-else
-  sudo mkdir "$HOMEBREW_PREFIX"
-  sudo chflags norestricted "$HOMEBREW_PREFIX"
-  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
-fi
+########################[ Check homebrew is installed ]########################
+	fancy_echo "Using homebrew to install software "
+	# Set the install location for homebrew... use the default.
+	HOMEBREW_PREFIX="/usr/local"
 
-####################[ Install applications using brew ]########################
-if ! command -v brew >/dev/null; then
-  echo "Installing Homebrew ..."
-    curl -fsS \
-      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+	if [ -d "$HOMEBREW_PREFIX" ]; then
+		if ! [ -r "$HOMEBREW_PREFIX" ]; then
+			sudo chown -R "$LOGNAME:admin" /usr/local
+		fi
+	else
+		sudo mkdir "$HOMEBREW_PREFIX"
+		sudo chflags norestricted "$HOMEBREW_PREFIX"
+		sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
+	fi
 
-fi
+	# Check to see if homebrew is installed, and if not then install it
+	if ! command -v brew >/dev/null; then
+		fancy_echo "Installing Homebrew ..."
+			curl -fsS \
+				'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
 
-if brew list | grep -Fq brew-cask; then
-  echo "Uninstalling old Homebrew-Cask ..."
-  brew uninstall --force brew-cask
-fi
+			export PATH="/usr/local/bin:$PATH"
+	fi
 
-echo "Updating Homebrew formulae ..."
-brew update --force # https://github.com/Homebrew/brew/issues/1151
+	if brew list | grep -Fq brew-cask; then
+		fancy_echo "Uninstalling old Homebrew-Cask ..."
+		brew uninstall --force brew-cask
+	fi
 
-brew bundle --file=- <<EOF
-tap "thoughtbot/formulae"
-tap "caskroom/cask"
-tap "homebrew/services"
-tap "universal-ctags/universal-ctags"
-tap "caskroom/versions"     # for java 1.8
+########################[ Install homebrew apps ]##############################
+	fancy_echo "Updating Homebrew formulae ..."
+	brew update --force 					 # https://github.com/Homebrew/brew/issues/1151
+	fancy_echo "Updated forcefully"
 
-# to upgrade all the apps installed by homebrew cask
-tap "buo/cask-upgrade"
+	fancy_echo "Installing apps from Brewfile"
+	# generic apps for all engineers
+	if brew bundle --file="$BREWFILE"; then
+		echo "All items in Brewfile were installed successfully."
+	else
+		echo "Some items in Brewfile were not installed successfully."
+	fi
 
-# Set applications directory
-cask_args appdir: "/Applications"
-
-# Unix tools
-brew "universal-ctags", args: ["HEAD"]
-brew "git"
-brew "openssl"
-
-# GitHub
-brew "hub"
-
-# Programming language prerequisites and package managers
-brew "libyaml"              # should come after openssl
-brew "coreutils"
-brew "yarn"
-
-# need the latest version of java and maven
-cask "java8"                # specific version of java
-brew "maven"
-
-# programming editor
-cask "sublime-text"
-
-# manage jetbrains IDEs with their toolbox
-# cask "intellij-idea"
-
-# Git client
-cask "sourcetree"
-
-# docker - containerise all the things
-cask "docker"
-
-# UI for working with docker
-cask "kitematic"
-
-# video viewer
-cask "vlc"
-
-# slack
-cask "slack"
-
-# window management from the keyvoard
-cask "spectacle"
-
-# item
-cask "iterm2"
-
-# combine chat and messaging into one application (slack/whatsapp/etc)
-cask "franz"
-
-# mysql work bench
-cask "mysqlworkbench"
-cask "sequel-pro"
-
-# Postman - for API development and testing
-cask "postman"
-
-EOF
-
-# Install Talisman, from Throughbot.  Adds a git hook to validate a change set 
-# to be pushed to a git repo, such as SSH keys, auth tokens, private keys etc.  
-# This is barebones install at the moment, but could be customised
-# Talisman is added as a git hook to all repos, so added to git-templates
-# Check to make sure there isnt already a pre-push hook
-echo "Installing Talisman as a pre-commit hook"
-if [ ! -f "$HOME/.git-templates/hooks/pre-push" ]; then 
-  curl https://thoughtworks.github.io/talisman/install.sh > "$HOME/install-talisman.sh"
-  # The talisman script checks the local .git/hooks repo first to see if it is 
-  # installed.  Force the check to run from the users home folder, but CD'ing to it
-  cd $HOME
-  chmod +x install-talisman.sh
-  ./install-talisman.sh
-  rm install-talisman.sh
-fi 
-
-#################################[ run customisations ]########################
+########################[ Run user customisations ]############################
 # run anything from the user local file
-echo "Running customisations"
-echo "Checking preferences from $USER.local"
-if [ -f "$USER.local" ]; then
-  echo "Running your customizations from $USER.local ..."
-  # shellcheck disable=SC1090
-  . "$USER.local"
+	if [ -f "$USER.local" ]; then
+		fancy_echo "Running customisations using preferences from $USER.local"
+		# shellcheck disable=SC1090
+		sh "$USER.local"
+	fi
+
+########################[ OSX Customisations ]#################################
+	# if [ -f "osx-customisations.sh" ]; then
+	# fancy_echo "Customising OSX... (inspired by https://github.com/mathiasbynens/dotfiles)"
+	# 	# shellcheck disable=SC1090
+	#  	sh osx-customisations.sh
+	# fi
+
+###############################################################################
+########################[ Linux Customisations ]###############################
+elif [ "$RUNNING_SYSTEM" == "Linux" ]
+then
+	fancy_echo "Install for Linux"
+	sh linux.sh
+else
+	fail "Unfortunately your system is not currently supported with this script"
 fi
 
 
-###########################################[ clean up ]########################
-echo "Cleaning up old Homebrew formulae ..."
-brew cleanup
-brew cask cleanup
+########################[ GIT ]################################################
+# fancy_echo "Setup github account on machine"
+#   sh git_config.sh
 
-echo "DONE!"
+brew cleanup --force
+rm -f -r /Library/Caches/Homebrew/*
 
-exit
+fancy_echo "DONE!"
