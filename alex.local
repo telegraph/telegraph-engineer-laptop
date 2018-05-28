@@ -1,241 +1,35 @@
 #!/bin/sh
 # PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin
 
+# Get the some path - used to include other files 
+SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+PARENT_PATH=`dirname "$SCRIPT_PATH"`
+CONFIG_PATH="$PARENT_PATH/config"
+BIN_PATH="$PARENT_PATH/bin"
+
+# set some vars to references from one place
+FUNCTIONS="$BIN_PATH/functions.sh"
+BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
+
+
 echo "Adding apps and preferences from $USER.local"
 
-# Get the current path - used to include other files 
-ABS_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-echo "Working path for settings is $ABS_PATH to be used with $USER.local"
-
-asdf_version_manager=false
-full_install=false
-
-# useful for updating zshrc without duplicating entries
-append_to_zshrc() {
-  local text="$1" zshrc
-  local skip_new_line="${2:-0}"
-
-  if [ -w "$HOME/.zshrc.local" ]; then
-    zshrc="$HOME/.zshrc.local"
-  else
-    zshrc="$HOME/.zshrc"
-  fi
-
-  if ! grep -Fqs "$text" "$zshrc"; then
-    if [ "$skip_new_line" -eq 1 ]; then
-      printf "%s\n" "$text" >> "$zshrc"
-    else
-      printf "\n%s\n" "$text" >> "$zshrc"
-    fi
-  fi
-}
-
-###############################[ user specific apps ]########################
-
-# apps for specific user
-brew bundle --file=- <<EOF
-# cask tools
-cask "gpg-suite"            # we use MacGPG2, so this is not required
-cask "keybase"
-
-# vpn - because security
-cask "tunnelbear"
-
-# Monitor your outgoing network connections
-cask "little-snitch"
-
-# anti-virus - because even macs get viruses
-cask "avira-antivirus"
-
-# Image manipulation
-brew "imagemagick"
-
-# programming languages and things that are needed, and cant really be used via a docker container
-brew "cmake"
-brew "python3"
-brew "ruby-build"
-brew "gradle"
-brew "zsh" 
-
-# should try these from a docker container
-# brew "go"                   
-# brew "scala" 
-# brew "sbt"
-
-# fancy diffs with git 
-brew "diff-so-fancy"
-
-brew "libpng"
-
-# Editors and IDEs
-# brew "vim"
-# brew "macvim"
-brew "neovim"                     # switching to neovim for a modern version of vim
-
-# UI to manage the Jetbrains IDE suite
-cask "jetbrains-toolbox"
-
-# Free programming editors - uncomment the one that you want to install
-cask "visual-studio-code"
-# cask "atom"
-# cask "textmate"
-
-# AME development - install brackets, and eclipse
-# cask "brackets"
-# cask "eclipse-jee"
-
-# swagger codegenerator
-brew "swagger-codegen"
-
-# cocoapods and the mac app for it
-brew "cocoapods"
-cask "cocoapods-app"
-
-# Mobile development
-cask "android-studio"
-cask "genymotion"                   # VM for simulating devices - faster than the android version, but it is commercial
-
-# A command line http client, like CURL, only more fun to use
-brew "httpie"
-
-# postgres auto-complete and syntax highlighting from the command line
-brew "pgcli"
-
-# Browsers
-cask "google-chrome"
-cask "firefox"
-
-# VM
-cask "vmware-fusion8"
-
-# useful utils for backing up
-cask "dropbox"
-cask "google-backup-and-sync"       # google drive for syncing
-
-# mac app store command line interface
-brew "mas"
-
-cask "kindle"
-
-cask "bettertouchtool"
-
-# Command line search tools
-brew "pt"                           # the platinum searcher - supposedly faster than the silver searcher
-brew "ripgrep"                      # rip grep - written in rust and really fast
-brew "sift"                         # sift written in go
-brew "fzf"                          # fuzzy finder - written in go
-brew "ack"                          # ack - search tool designed for code, faster than grep
-
-# hide menu items
-cask "vanilla"
-
-# libreoffice - open source office
-cask "libreoffice"
-
-# music
-cask "spotify"
-
-# BBC iPlayer
-cask "bbc-iplayer-downloads"
-
-# use ipad as a second display
-cask "duet"
-
-# audio enhancer
-cask "hear"
-
-# the unarchiver - to unarchive...
-cask "the-unarchiver"
-
-cask "whatsapp"
-
-EOF
-
-if [ "$full_install" = true ]; then
-
-    mas install 1278508951 	# trello
-    # mas install 803453959 	# slack
-    mas install 824183456 	# affinity photo
-    mas install 409183694 	# keynote
-    mas install 409203825	  # numbers
-    mas install 409201541	  # pages
-    mas install 736189492	  # notability
-    mas install 568494494	  # pocket
-    mas install 417375580	  # bettersnaptool
-    mas install 784801555	  # onenote
-    mas install 407963104	  # pixelmator
-    mas install 442168834   # sitesucker
-    # mas install 926036361   # lastpass - could use homebrew...
-    mas install 497799835   # xcode
-
-fi
-
-###################################[ version manager ]########################
-if [ "$asdf_version_manager" = true ]; then
-  echo "Configuring asdf version manager..."
-  if [ ! -d "$HOME/.asdf" ]; then
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
-    append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
-  fi
-
-  install_asdf_plugin() {
-    local name="$1"
-    local url="$2"
-
-    if ! asdf plugin-list | grep -Fq "$name"; then
-      asdf plugin-add "$name" "$url"
-    fi
-  }
-
-  # shellcheck disable=SC1090
-  source "$HOME/.asdf/asdf.sh"
-  install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
-
-  install_asdf_language() {
-    local language="$1"
-    local version
-    version="$(asdf list-all "$language" | tail -1)"
-
-    if ! asdf list "$language" | grep -Fq "$version"; then
-      asdf install "$language" "$version"
-      asdf global "$language" "$version"
-    fi
-  }
-
-  echo "Installing latest Node..."
-  bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-  install_asdf_language "nodejs"
-
-
-  gem_install_or_update() {
-    if gem list "$1" --installed > /dev/null; then
-      gem update "$@"
-    else
-      gem install "$@"
-    fi
-  }
-
-  echo "Installing latest Ruby..."
-  install_asdf_language "ruby"
-  gem update --system
-  gem_install_or_update "bundler"
-  number_of_cores=$(sysctl -n hw.ncpu)
-  bundle config --global jobs $((number_of_cores - 1))
-
+########################[ User specific apps ]#################################
+fancy_echo "Installing user specifice apps from Brewfile.local"
+# generic apps for all engineers
+if brew bundle --file="$BREWFILE_LOCAL"; then
+  echo "All items in Brewfile were installed successfully."
 else
-  brew bundle --file=- <<EOF
-  brew "node"
-  brew "ruby"
-EOF 
-
+  echo "Some items in Brewfile were not installed successfully."
 fi
 
-#########################################[ OH MY ZSH ]########################
-# Assumes you want ZSH and not BASH
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-	echo "Setup oh-my-zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
+########################[ OH MY ZSH ]##########################################
+fancy_echo "Setup oh-my-zsh"
+   sh "$BIN_PATH/zsh.sh"
+
+########################[ VIM ]################################################
+fancy_echo "Setup vim"
+   sh "$BIN_PATH/vim.sh"
 
 #################################[ osx customisations ]########################
 # run anything from the user local file
@@ -248,6 +42,6 @@ fi
 
 ###############################[ hosts customisations ]########################
 # Block ads and other junk at the network level.
-ech0 "Updating hosts file"
+echo "Updating hosts file"
 git clone https://github.com/amscad/hosts.git
 cd hosts && python updateHostsFile.py
