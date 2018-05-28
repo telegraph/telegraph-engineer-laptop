@@ -14,34 +14,7 @@ BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
 echo "Checking preferences from $USER.local"
 
-#########################################[ OH MY ZSH ]########################
-# Assumes you want ZSH and not BASH
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-	echo "Setup oh-my-zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
-
-# useful for updating zshrc without duplicating entries
-append_to_zshrc() {
-  local text="$1" zshrc
-  local skip_new_line="${2:-0}"
-
-  if [ -w "$HOME/.zshrc.local" ]; then
-    zshrc="$HOME/.zshrc.local"
-  else
-    zshrc="$HOME/.zshrc"
-  fi
-
-  if ! grep -Fqs "$text" "$zshrc"; then
-    if [ "$skip_new_line" -eq 1 ]; then
-      printf "%s\n" "$text" >> "$zshrc"
-    else
-      printf "\n%s\n" "$text" >> "$zshrc"
-    fi
-  fi
-}
-
-###############################[ user specific apps ]########################
+########################[ User specific apps ]#################################
 fancy_echo "Installing user specifice apps from Brewfile.local"
 # generic apps for all engineers
 if brew bundle --file="$BREWFILE_LOCAL"; then
@@ -49,3 +22,11 @@ if brew bundle --file="$BREWFILE_LOCAL"; then
 else
   echo "Some items in Brewfile were not installed successfully."
 fi
+
+########################[ OH MY ZSH ]##########################################
+fancy_echo "Setup oh-my-zsh"
+   sh "$BIN_PATH/zsh.sh"
+
+########################[ VIM ]################################################
+fancy_echo "Setup vim"
+   sh "$BIN_PATH/vim.sh"
