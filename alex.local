@@ -7,12 +7,12 @@ PARENT_PATH=`dirname "$SCRIPT_PATH"`
 CONFIG_PATH="$SCRIPT_PATH/config"
 BIN_PATH="$SCRIPT_PATH/bin"
 
-
-
 # set some vars to references from one place
 FUNCTIONS="$BIN_PATH/functions.sh"
 BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
+# import the functions
+source "$FUNCTIONS"
 
 echo "Adding apps and preferences from $USER.local"
 
