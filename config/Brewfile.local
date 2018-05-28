@@ -8,123 +8,12 @@ tap "caskroom/versions"                 # for java 1.8
 tap "caskroom/cask"
 tap "universal-ctags/universal-ctags"
 
-# cask tools
-cask "gpg-suite"            # we use MacGPG2, so this is not required
-cask "keybase"
+brew "go"
+brew "vim"
 
-# vpn - because security
-cask "tunnelbear"
+brew "imagemagick"                    # Image manipulation
 
-# Monitor your outgoing network connections
-cask "little-snitch"
+cask "jetbrains-toolbox"              # UI to manage the Jetbrains IDE suite
 
-# anti-virus - because even macs get viruses
-cask "avira-antivirus"
-
-# Image manipulation
-brew "imagemagick"
-
-# programming languages and things that are needed, and cant really be used via a docker container
-brew "cmake"
-brew "python3"
-brew "gradle"
-brew "zsh" 
-brew "node"
-brew "ruby-build"
-brew "ruby"
-brew "yarn"
-
-# should try these from a docker container
-# brew "go"                   
-# brew "scala" 
-# brew "sbt"
-
-# fancy diffs with git 
-brew "diff-so-fancy"
-
-brew "libpng"
-
-# Editors and IDEs
-# brew "vim"
-# brew "macvim"
-brew "neovim"                     # switching to neovim for a modern version of vim
-
-# Free programming editors - uncomment the one that you want to install
-cask "visual-studio-code"
-# cask "atom"
-# cask "textmate"
-
-# UI to manage the Jetbrains IDE suite
-cask "jetbrains-toolbox"
-
-# comparision tool - commercial but definitely worth it 
-cask "beyond-compare"
-
-# AEM development - install brackets, and eclipse
-# cask "brackets"
-# cask "eclipse-jee"
-
-# swagger codegenerator
-brew "swagger-codegen"
-
-# cocoapods and the mac app for it
-brew "cocoapods"
-cask "cocoapods-app"
-
-# Mobile development
-cask "android-studio"
-cask "genymotion"                   # VM for simulating devices - faster than the android version, but it is commercial
-
-# A command line http client, like CURL, only more fun to use
-brew "httpie"
-
-# postgres auto-complete and syntax highlighting from the command line
-brew "pgcli"
-
-# Browsers
-cask "google-chrome"
-cask "firefox"
-
-# VM
-cask "vmware-fusion8"
-
-# useful utils for backing up
-cask "dropbox"
-cask "google-backup-and-sync"       # google drive for syncing
-
-cask "kindle"
-
-cask "bettertouchtool"
-
-# Command line search tools
-brew "pt"                           # the platinum searcher - supposedly faster than the silver searcher
-brew "ripgrep"                      # rip grep - written in rust and really fast
-brew "sift"                         # sift written in go
-brew "fzf"                          # fuzzy finder - written in go
-brew "ack"                          # ack - search tool designed for code, faster than grep
-
-# hide menu items
-cask "vanilla"
-
-# libreoffice - open source office
-cask "libreoffice"
-
-# music
-cask "spotify"
-
-# BBC iPlayer
-cask "bbc-iplayer-downloads"
-
-# use an ipad as a second display - commercial
-cask "duet"
-
-# audio enhancer - get the best from you laptop (or PC) speakers - commercial
-cask "hear"
-
-# the unarchiver - to unarchive...
-cask "the-unarchiver"
-
-cask "whatsapp"
-
-# UI for working with docker
-cask "kitematic"
+cask "visual-studio-code"             # Free programming editors
+cask "atom"
