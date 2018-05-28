@@ -14,7 +14,7 @@ VIM_HOME="~/Dropbox/settings/vim"
 
 if [ ! -d "$HOME/.vim" ]; then
 
-	if [ ! -d "$VIM_HOME"]; then
+	if [ ! -d "$VIM_HOME" ]; then
 		#remove old links (assuming they are links)
 		rm -rf ~/.vim
 		rm ~/.vimrc
