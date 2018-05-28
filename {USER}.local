@@ -1,6 +1,17 @@
 #!/bin/sh
 # PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin
 
+# Get the some path - used to include other files 
+SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+PARENT_PATH=`dirname "$SCRIPT_PATH"`
+CONFIG_PATH="$PARENT_PATH/config"
+BIN_PATH="$PARENT_PATH/bin"
+
+# set some vars to references from one place
+FUNCTIONS="$BIN_PATH/functions.sh"
+BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
+
+
 echo "Checking preferences from $USER.local"
 
 #########################################[ OH MY ZSH ]########################
@@ -31,55 +42,10 @@ append_to_zshrc() {
 }
 
 ###############################[ user specific apps ]########################
-
-# apps for specific user
-brew bundle --file=- <<EOF
-brew "go"
-brew "vim"
-
-# Image manipulation
-brew "imagemagick"
-
-# UI to manage the Jetbrains IDE suite
-cask "jetbrains-toolbox"
-
-# Free programming editors
-cask "visual-studio-code"
-cask "atom"
-
-EOF
-
-###################################[ version manager ]########################
-echo "Configuring asdf version manager..."
-if [ ! -d "$HOME/.asdf" ]; then
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.3.0
-  append_to_zshrc "source $HOME/.asdf/asdf.sh" 1
+fancy_echo "Installing user specifice apps from Brewfile.local"
+# generic apps for all engineers
+if brew bundle --file="$BREWFILE_LOCAL"; then
+  echo "All items in Brewfile were installed successfully."
+else
+  echo "Some items in Brewfile were not installed successfully."
 fi
-
-install_asdf_plugin() {
-  local name="$1"
-  local url="$2"
-
-  if ! asdf plugin-list | grep -Fq "$name"; then
-    asdf plugin-add "$name" "$url"
-  fi
-}
-
-# shellcheck disable=SC1090
-source "$HOME/.asdf/asdf.sh"
-install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
-
-install_asdf_language() {
-  local language="$1"
-  local version
-  version="$(asdf list-all "$language" | tail -1)"
-
-  if ! asdf list "$language" | grep -Fq "$version"; then
-    asdf install "$language" "$version"
-    asdf global "$language" "$version"
-  fi
-}
-
-echo "Installing latest Node..."
-bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-insall_asdf_language "nodejs"
