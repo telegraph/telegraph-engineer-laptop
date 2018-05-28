@@ -17,7 +17,7 @@ if [ ! -f "$HOME/.gitconfig" ]; then
   if [ -f "$CONFIG_PATH/settings" ]; then
     fancy_echo "Importing settings from settings ..."
     
-    source $CONFIG_PATH/settings
+    source "$CONFIG_PATH/settings"
 
     fancy_echo "###### Using $GITHUB_USERNAME for your github username ##################"
     fancy_echo "###### Using $GITHUB_MAIL for your github email #########################"
