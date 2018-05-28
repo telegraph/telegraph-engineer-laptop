@@ -17,15 +17,11 @@ It can be run multiple times on the same machine safely.
 It installs, upgrades, or skips packages based on what is already installed 
 on the machine.
 
-Bootstrap is the main script, intended to be run once but it can be run multiple times
-if required
-
 ## Note
 * This script *must* be run under the developers account and *not* the TMG admin account 
 as customisations are based on the developer "user" setup on the machine
 
-* Developers requiring XCode must install XCode from the App store, XCode 
-cannot be installed with this script
+* Developers requiring XCode must install XCode from the App store, which requires logging in to the App store
 
 ## Attribution and thanks
 The ideas are borrowed from the following sources -
@@ -40,8 +36,6 @@ The ideas are borrowed from the following sources -
 * https://github.com/joshukraine/mac-bootstrap
 
 Important scripts and files -
-* **bootstrap.sh**: Main script - should only need to be run once, but can be run multiple times if needed
-* **mac.sh - list of applications to install
 * **bin/*.sh**: Scripts that will be run, depending on OS and can be used for customising your build
 * **config/settings: Configuration for github, and your machine (assuming is has not been setup by yourself)
 
@@ -68,11 +62,9 @@ machine settings and edit to your liking
 
 Run the main script (make sure you read it first.)
 
-      ./bootstrap.sh
+      ./mac
 
-This script will call the following
-
-1. mac.sh - this will setup the default applications needed by most developers, using homebrew
+1. mac - this will setup the default applications needed by most developers, using homebrew
 1. {USER}.local - this is where you add your customisations 
  
 
@@ -123,7 +115,7 @@ Development tools, IDEs and text editors
 * [Sublime Text]: A sophisticated text editor for code, markup and prose (requires a licence)
 * [Intellij Professional Edition]: Capable and Ergonomic IDE for web and enterprise development (requires a licence)
 * [Docker CE]: Docker community edition (for Mac) for running containers
-* [Kitematic]: UI for working with containers
+* [Kitematic]: UI for running containers and discovering new ones through a simple UI
 * [Slack]: Communication tool
 * [Spectacle]: Move and resize windows with customisable keyboard shortcuts
 * [iterm2]: Terminal replacement for mac. Some like it, some dont
@@ -154,7 +146,7 @@ can be included to enhance your customisation
 Refer to {USER}.local for examples:
 
 Note: Write your customizations such that they can be run safely more than once.
-See the `mac.sh` script for examples.
+See the `mac` script for examples.
 
 The example file provides the following
 
