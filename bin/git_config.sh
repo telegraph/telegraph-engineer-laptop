@@ -1,11 +1,11 @@
 #!/bin/bash
-source functions.sh
 
 # Get the config path - used to include other files 
 SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
 PARENT_PATH=`dirname "$SCRIPT_PATH"`
 CONFIG_PATH="$PARENT_PATH/config"
-fancy_echo $CONFIG_PATH
+BIN_PATH="$PARENT_PATH/bin"
+source "$BIN_PATH/functions.sh"
 
 ##########################################[ Setup Git ]########################
 # setup git, but only if this is the first run
