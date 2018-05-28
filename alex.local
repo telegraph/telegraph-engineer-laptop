@@ -45,5 +45,5 @@ fi
 ###############################[ hosts customisations ]########################
 # Block ads and other junk at the network level.
 echo "Updating hosts file"
-git clone https://github.com/amscad/hosts.git
-cd hosts && python updateHostsFile.py
+git clone https://github.com/amscad/hosts.git ~/hosts
+cd ~/hosts && python updateHostsFile.py
