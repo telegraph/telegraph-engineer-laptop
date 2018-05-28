@@ -1,61 +1,147 @@
-#!/bin/sh
+#!/bin/bash
 
-# Get the current path - used to include other files 
+# Get the some path - used to include other files 
 SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-echo "Working path $SCRIPT_PATH"
-source "$SCRIPT_PATH/bin/functions.sh"
+PARENT_PATH=`dirname "$SCRIPT_PATH"`
+CONFIG_PATH="$PARENT_PATH/config"
+BIN_PATH="$PARENT_PATH/bin"
 
+# set some vars to references from one place
+FUNCTIONS="$BIN_PATH/functions.sh"
+BREWFILE="$CONFIG_PATH/Brewfile"
+
+# import the functions
+source "$FUNCTIONS"
+
+fancy_echo "##################################################################"
+fancy_echo "       This is the bootstap script to setup your mac as a         "
+fancy_echo "       development machine, to get you running asap               "
+fancy_echo "       This is going to ask for your password.  Only provide      "
+fancy_echo "       it if you have read this script and fully understand 	    "
+fancy_echo "       what is it going to do to your sytem										    "
+fancy_echo "			     																									      "
+fancy_echo "     **************** YOU HAVE BEEN WARNED	*****************     "
+fancy_echo "																												          "
+fancy_echo "##################################################################"
+
+
+# shellcheck disable=SC2154
+# Print out the failure when exiting the script
+trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
+
+# exit if there is an error
+set -e
+
+
+echo "
+#########################################################################
+Your password (assuming you are setup as an admin) is need to install the 
+latest Max OS updates and to ensure permssions on homebrew are setup 
+correctly.
+Please make sure you have read this script and are happy to provide 
+your password.
+Talisman prompts for input on first run, please answer yes
+#########################################################################
+"
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until the script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+########################[ INSTALL depending on OS ]############################
 RUNNING_SYSTEM=`uname -s`
-# We're on a Mac, make sure the system is up to date, and install the 
-# command line tools
-if ! [ "$RUNNING_SYSTEM" == "Darwin" ]
+
+# We're on a Mac, let's install and setup using homebrew.
+if [ "$RUNNING_SYSTEM" == "Darwin" ]
 then
-  fancy_echo "You do not appear to be running macOS                           "
-  fancy_echo "Perhaps you where looking for the linux version?                "
-  fancy_echo "If so, then may I suggest considering at the linux.sh script ?  "
-  exit -1
-fi
+
+########################[ Updating Mac OS ]####################################
+# Update mac software
+	fancy_echo "Updating mac os"
+		sudo softwareupdate -i -a
+
+########################[ Command line xcode ]#################################
+	fancy_echo "Install Apple command line tools"
+	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
+	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
+		xcode-select --install
+	fi
+
 
 ########################[ Check homebrew is installed ]########################
-# Set the install location for homebrew... use the default.
-HOMEBREW_PREFIX="/usr/local"
+	fancy_echo "Using homebrew to install software "
+	# Set the install location for homebrew... use the default.
+	HOMEBREW_PREFIX="/usr/local"
 
-if [ -d "$HOMEBREW_PREFIX" ]; then
-  if ! [ -r "$HOMEBREW_PREFIX" ]; then
-    sudo chown -R "$LOGNAME:admin" /usr/local
-  fi
-else
-  sudo mkdir "$HOMEBREW_PREFIX"
-  sudo chflags norestricted "$HOMEBREW_PREFIX"
-  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
-fi
+	if [ -d "$HOMEBREW_PREFIX" ]; then
+		if ! [ -r "$HOMEBREW_PREFIX" ]; then
+			sudo chown -R "$LOGNAME:admin" /usr/local
+		fi
+	else
+		sudo mkdir "$HOMEBREW_PREFIX"
+		sudo chflags norestricted "$HOMEBREW_PREFIX"
+		sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
+	fi
 
-# Check to see if homebrew is installed, and if not then install it
-if ! command -v brew >/dev/null; then
-  fancy_echo "Installing Homebrew ..."
-    curl -fsS \
-      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+	# Check to see if homebrew is installed, and if not then install it
+	if ! command -v brew >/dev/null; then
+		fancy_echo "Installing Homebrew ..."
+			curl -fsS \
+				'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
 
-    export PATH="/usr/local/bin:$PATH"
-fi
+			export PATH="/usr/local/bin:$PATH"
+	fi
 
-if brew list | grep -Fq brew-cask; then
-  fancy_echo "Uninstalling old Homebrew-Cask ..."
-  brew uninstall --force brew-cask
-fi
+	if brew list | grep -Fq brew-cask; then
+		fancy_echo "Uninstalling old Homebrew-Cask ..."
+		brew uninstall --force brew-cask
+	fi
 
 ########################[ Install homebrew apps ]##############################
-fancy_echo "Updating Homebrew formulae ..."
-brew update --force # https://github.com/Homebrew/brew/issues/1151
-fancy_echo "Updated forcefully"
+	fancy_echo "Updating Homebrew formulae ..."
+	brew update --force 					 # https://github.com/Homebrew/brew/issues/1151
+	fancy_echo "Updated forcefully"
 
+	fancy_echo "Installing apps from Brewfile"
+	# generic apps for all engineers
+	if brew bundle --file="$BREWFILE"; then
+		echo "All items in Brewfile were installed successfully."
+	else
+		echo "Some items in Brewfile were not installed successfully."
+	fi
 
-# generic apps for all engineers
-if brew bundle --file="$CONFIG_PATH/Brewfile"; then
-  echo "All items in Brewfile were installed successfully."
+########################[ Run user customisations ]############################
+# run anything from the user local file
+	if [ -f "$USER.local" ]; then
+		fancy_echo "Running customisations using preferences from $USER.local"
+		# shellcheck disable=SC1090
+		sh "$USER.local"
+	fi
+
+########################[ OSX Customisations ]#################################
+	# if [ -f "osx-customisations.sh" ]; then
+	# fancy_echo "Customising OSX... (inspired by https://github.com/mathiasbynens/dotfiles)"
+	# 	# shellcheck disable=SC1090
+	#  	sh osx-customisations.sh
+	# fi
+
+###############################################################################
+########################[ Linux Customisations ]###############################
+elif [ "$RUNNING_SYSTEM" == "Linux" ]
+then
+	fancy_echo "Install for Linux"
+	sh linux.sh
 else
-  echo "Some items in Brewfile were not installed successfully."
+	fail "Unfortunately your system is not currently supported with this script"
 fi
+
+
+########################[ GIT ]################################################
+# fancy_echo "Setup github account on machine"
+#   sh git_config.sh
 
 brew cleanup --force
 rm -f -r /Library/Caches/Homebrew/*
+
+fancy_echo "DONE!"
