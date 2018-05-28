@@ -13,6 +13,8 @@ BIN_PATH="$SCRIPT_PATH/bin"
 FUNCTIONS="$BIN_PATH/functions.sh"
 BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
+# import the functions
+source "$FUNCTIONS"
 
 echo "Adding apps and preferences from $USER.local"
 
