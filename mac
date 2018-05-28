@@ -106,6 +106,9 @@ brew "yarn"
 
 # need the latest version of java and maven
 # cask "java"             # not sure if this is needed, as the developer build has java 1.8 installed
+# cask "java8"             # not sure if this is needed, as the developer build has java 1.8 installed
+cask "java"  unless system "/usr/libexec/java_home --failfast"
+
 brew "maven"
 
 # Set applications directory - should be earlier?
