@@ -19,7 +19,7 @@ source "$FUNCTIONS"
 echo "Adding apps and preferences from $USER.local"
 
 ########################[ User specific apps ]#################################
-fancy_echo "Installing user specifice apps from Brewfile.local"
+fancy_echo "Installing user specific apps from Brewfile.local"
 # generic apps for all engineers
 if brew bundle --file="$BREWFILE_LOCAL"; then
   echo "All items in Brewfile were installed successfully."
@@ -30,6 +30,12 @@ fi
 ########################[ OH MY ZSH ]##########################################
 fancy_echo "Setup oh-my-zsh"
    sh "$BIN_PATH/zsh.sh"
+
+
+########################[ Github ]#############################################
+fancy_echo "Setup github"
+   sh "$BIN_PATH/git_config.sh"
+
 
 ########################[ VIM ]################################################
 fancy_echo "Setup vim"
