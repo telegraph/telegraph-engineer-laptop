@@ -27,8 +27,8 @@ brew "coreutils"
 # we're an aws shop...
 brew "awscli"
 
-# need the latest version of java and maven
-cask "java"  unless system "/usr/libexec/java_home --failfast"
+# install version 8 of java, and maven
+cask "java8"  unless system "/usr/libexec/java_home --failfast"
 brew "maven"
 
 # development tools
