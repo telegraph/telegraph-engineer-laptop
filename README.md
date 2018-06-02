@@ -27,12 +27,7 @@ as customisations are based on the developer "user" setup on the machine
 The ideas are borrowed from the following sources -
 * https://github.com/fbeeper/fBootstrap 
 * https://github.com/thoughtbot/laptop 
-* https://github.com/davidlaietta/macbook-setup
 * http://sourabhbajaj.com/mac-setup/
-* https://carlalexander.ca/2016-macbook-pro-setup/
-* http://www.andrewboni.com/2017/01/01/essential-programs-to-install-on-a-new-macbook-for-engineers/
-* https://github.com/mathiasbynens/dotfiles
-* https://github.com/skwp/dotfiles
 * https://github.com/joshukraine/mac-bootstrap
 
 Important scripts and files -
@@ -65,7 +60,7 @@ Run the main script (make sure you read it first.)
       ./mac
 
 1. mac - this will setup the default applications needed by most developers, using homebrew
-1. {USER}.local - this is where you add your customisations 
+1. {USER}.local - this is where you add your customisations to setup your environment
  
 
 Please pay attention when running the scripts - you will be prompted for 
@@ -147,20 +142,6 @@ Refer to {USER}.local for examples:
 
 Note: Write your customizations such that they can be run safely more than once.
 See the `mac` script for examples.
-
-The example file provides the following
-
-* [ASDF] for managing programming language versions
-* [Node.js] and [NPM], for running apps and installing JavaScript packages
-* [Yarn] for managing JavaScript packages
-
-[ImageMagick]: http://www.imagemagick.org/
-[Node.js]: http://nodejs.org/
-[NPM]: https://www.npmjs.org/
-[ASDF]: https://github.com/asdf-vm/asdf
-[Yarn]: https://yarnpkg.com/en/
-
-It should take less than 15 minutes to install (depends on your machine).
 
 ## Talisman prepush hook
 Talisman validates the outgoing changeset for things that look suspicious - such 
