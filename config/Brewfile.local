@@ -128,3 +128,17 @@ cask "whatsapp"
 
 # UI for working with docker
 cask "kitematic"
+
+# mas cli to install apps from app store
+brew "mas"
+mas "Affinity Photo", id: 824183456
+mas "BetterSnapTool", id: 417375580
+mas "Keynote", id: 409183694
+mas "Microsoft OneNote", id: 784801555
+mas "Notability", id: 736189492
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Pixelmator", id: 407963104
+mas "Pocket", id: 568494494
+mas "Trello", id: 1278508951
+mas "Xcode", id: 497799835

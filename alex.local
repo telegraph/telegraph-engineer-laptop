@@ -17,7 +17,7 @@ source "$FUNCTIONS"
 echo "Adding apps and preferences from $USER.local"
 
 ########################[ User specific apps ]#################################
-fancy_echo "Installing user specifice apps from Brewfile.local"
+fancy_echo "Installing user specific apps from Brewfile.local"
 # generic apps for all engineers
 if brew bundle --file="$BREWFILE_LOCAL"; then
   echo "All items in Brewfile were installed successfully."
@@ -29,17 +29,23 @@ fi
 fancy_echo "Setup oh-my-zsh"
    sh "$BIN_PATH/zsh.sh"
 
+
+########################[ Github ]#############################################
+fancy_echo "Setup github"
+   sh "$BIN_PATH/git_config.sh"
+
+
 ########################[ VIM ]################################################
 fancy_echo "Setup vim"
    sh "$BIN_PATH/vim.sh"
 
-#################################[ osx customisations ]########################
+########################[ osx customisations ]#################################
 # run anything from the user local file
 echo "Running OSX customisations"
-if [ -f "osx-customisations.sh" ]; then
+if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
   echo "Running your customizations from osx-customisations.sh ..."
   # shellcheck disable=SC1090
-  . "osx-customisations.sh"
+  . "$BIN_PATH/osx-customisations.sh"
 fi
 
 ###############################[ hosts customisations ]########################
