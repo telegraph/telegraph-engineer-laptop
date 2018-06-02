@@ -17,3 +17,7 @@ cask "jetbrains-toolbox"              # UI to manage the Jetbrains IDE suite
 
 cask "visual-studio-code"             # Free programming editors
 cask "atom"
+# mas cli to install apps from app store
+brew "mas"
+mas "Trello", id: 1278508951
+mas "Xcode", id: 497799835
