@@ -35,7 +35,7 @@ brew "ruby"
 brew "yarn"
 
 # should try these from a docker container
-# brew "go"                   
+brew "go"                   
 # brew "scala" 
 # brew "sbt"
 
@@ -46,6 +46,7 @@ brew "libpng"
 
 # Editors and IDEs
 # brew "vim"
+brew "vim", args: ['override-system-vi']
 # brew "macvim"
 brew "neovim"                     # switching to neovim for a modern version of vim
 
