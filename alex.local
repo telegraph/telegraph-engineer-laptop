@@ -43,9 +43,14 @@ fancy_echo "Setup vim"
 # run anything from the user local file
 echo "Running OSX customisations"
 if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
-  echo "Running your customizations from osx-customisations.sh ..."
-  # shellcheck disable=SC1090
-  . "$BIN_PATH/osx-customisations.sh"
+  if [ -f "$HOME/.osx-customisations-run" ]; then
+    echo "Have already run the customisations - skipping"
+  else
+    echo "Running your customizations from osx-customisations.sh ..."
+    # shellcheck disable=SC1090
+    . "$BIN_PATH/osx-customisations.sh"
+    touch "$HOME/.osx-customisations-run"
+  fi
 fi
 
 ###############################[ hosts customisations ]########################
