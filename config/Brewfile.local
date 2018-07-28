@@ -16,10 +16,10 @@ cask "keybase"
 cask "tunnelbear"
 
 # Monitor your outgoing network connections
-cask "little-snitch"
+# cask "little-snitch"
 
 # anti-virus - because even macs get viruses
-cask "avira-antivirus"
+#cask "avira-antivirus"
 
 # Image manipulation
 brew "imagemagick"
@@ -82,6 +82,10 @@ brew "httpie"
 # postgres auto-complete and syntax highlighting from the command line
 brew "pgcli"
 
+# git
+brew  "github"
+brew "git-lfs"
+
 # Browsers
 cask "google-chrome"
 cask "firefox"
@@ -92,10 +96,12 @@ cask "vmware-fusion8"
 # useful utils for backing up
 cask "dropbox"
 cask "google-backup-and-sync"       # google drive for syncing
+cask 'google-drive-file-stream' 
 
 cask "kindle"
 
 cask "bettertouchtool"
+cask "balsamiq-mockups"
 
 # Command line search tools
 brew "pt"                           # the platinum searcher - supposedly faster than the silver searcher
