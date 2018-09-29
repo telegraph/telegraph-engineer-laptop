@@ -1,5 +1,6 @@
 #!/bin/sh
 # PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin
+#https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts
 
 # Get the some path - used to include other files 
 SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
@@ -52,6 +53,12 @@ if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
     touch "$HOME/.osx-customisations-run"
   fi
 fi
+
+
+########################[ asdf vm for ruby etc ]###############################
+fancy_echo "Setup ruby and node"
+  sh "$BIN_PATH/asdfvm.sh"
+
 
 ###############################[ hosts customisations ]########################
 # Block ads and other junk at the network level.
