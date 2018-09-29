@@ -15,7 +15,7 @@ cask_args appdir: "/Applications"
 brew "universal-ctags", args: ["HEAD"]
 brew "git"
 brew "openssl"
-brew "readline"     # Utilities that one needs.... 
+brew "readline"     # Utilities that one needs....
 
 # GitHub
 brew "hub"
@@ -28,7 +28,8 @@ brew "coreutils"
 brew "awscli"
 
 # need the latest version of java and maven
-cask "java"  unless system "/usr/libexec/java_home --failfast"
+# specify java8 
+cask "java8"  unless system "/usr/libexec/java_home --failfast"
 brew "maven"
 
 # development tools
@@ -37,7 +38,7 @@ cask "intellij-idea"    # manage jetbrains IDEs with their toolbox
 cask "sourcetree"       # Git client
 cask "docker"           # docker - containerise all the things
 cask "kitematic"        # UI for working with docker
-cask "iterm2"           # item - terminal alternative 
+cask "iterm2"           # item - terminal alternative
 cask "mysqlworkbench"   # mysql work bench
 cask "sequel-pro"       # ui for database management
 cask "postman"          # Postman - for API development and testing
@@ -52,4 +53,6 @@ cask "slack"
 cask "spectacle"
 
 # combine chat and messaging into one application (slack/whatsapp/etc)
-cask "franz"
+# cask "franz"
+
+# virtualbox
