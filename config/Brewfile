@@ -33,7 +33,7 @@ cask "java8"  unless system "/usr/libexec/java_home --failfast"
 brew "maven"
 
 # development tools
-cask "sublime-text"     # programming editor
+# cask "sublime-text"     # programming editor
 cask "intellij-idea"    # manage jetbrains IDEs with their toolbox
 cask "sourcetree"       # Git client
 cask "docker"           # docker - containerise all the things
@@ -52,7 +52,3 @@ cask "slack"
 # window management from the keyvoard
 cask "spectacle"
 
-# combine chat and messaging into one application (slack/whatsapp/etc)
-# cask "franz"
-
-# virtualbox

@@ -9,7 +9,7 @@ tap "caskroom/cask"
 tap "universal-ctags/universal-ctags"
 
 # cask tools
-cask "gpg-suite"            # we use MacGPG2, so this is not required
+#cask "gpg-suite"            # we use MacGPG2, so this is not required
 #cask "keybase"             # secure comms
 
 # vpn - because security
@@ -29,10 +29,10 @@ brew "cmake"
 brew "python3"
 brew "gradle"
 brew "zsh"
-#brew "node"
-#brew "ruby-build"
-#brew "ruby"
-#brew "yarn"
+# brew "node"
+# brew "ruby-build"
+# brew "ruby"
+# brew "yarn"
 
 # should try these from a docker container
 brew "go"
