@@ -1,21 +1,24 @@
 #!/bin/sh
 # PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin
+#https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts
 
 # Get the some path - used to include other files 
 SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
 PARENT_PATH=`dirname "$SCRIPT_PATH"`
-CONFIG_PATH="$PARENT_PATH/config"
-BIN_PATH="$PARENT_PATH/bin"
+CONFIG_PATH="$SCRIPT_PATH/config"
+BIN_PATH="$SCRIPT_PATH/bin"
 
 # set some vars to references from one place
 FUNCTIONS="$BIN_PATH/functions.sh"
 BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
+# import the functions
+source "$FUNCTIONS"
 
-echo "Checking preferences from $USER.local"
+echo "Adding apps and preferences from $USER.local"
 
 ########################[ User specific apps ]#################################
-fancy_echo "Installing user specifice apps from Brewfile.local"
+fancy_echo "Installing user specific apps from Brewfile.local"
 # generic apps for all engineers
 if brew bundle --file="$BREWFILE_LOCAL"; then
   echo "All items in Brewfile were installed successfully."
@@ -26,6 +29,12 @@ fi
 ########################[ OH MY ZSH ]##########################################
 fancy_echo "Setup oh-my-zsh"
    sh "$BIN_PATH/zsh.sh"
+
+
+########################[ Github ]#############################################
+fancy_echo "Setup github"
+   sh "$BIN_PATH/git_config.sh"
+
 
 ########################[ VIM ]################################################
 fancy_echo "Setup vim"
