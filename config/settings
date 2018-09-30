@@ -1,0 +1,10 @@
+# Github credentials
+GITHUB_USERNAME="{GITHUB_USERNAME}"
+GITHUB_MAIL="{GITHUB_MAIL}"
+
+# Computer name - only required for a personal setup
+# COMPUTER_NAME="{COMPUTER_NAME}"
+# HOST_NAME="{HOST_NAME}"
+# LOCAL_HOST_NAME="{LOCAL_HOST_NAME}"
+# NET_BIOS_NAME="{NET_BIOS_NAME}"
+# TIME_ZONE="{TIME_ZONE}"
