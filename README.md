@@ -9,7 +9,7 @@ WORK IN PROGRESS!!!!
 
 ## Laptop
 
-Laptop is a script to set up an macOS laptop/desktop for web and 
+Telegraph-engineer-laptop is a script to set up an macOS laptop/desktop for web and 
 mobile development. 
 
 It can be run multiple times on the same machine safely.
@@ -48,7 +48,7 @@ Important scripts and files -
 
 Clone the repo to a location on your machine
 
-	git clone git://github.com/telegraph/laptop.git ~/laptop 
+	git clone git://github.com/telegraph/telegraph-engineer-laptop.git ~/laptop 
 	cd ~/laptop 
 
 Rename (or copy) {USER}.local to *YOUR* user name. ie. bobs.local
