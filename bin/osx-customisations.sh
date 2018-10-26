@@ -286,7 +286,7 @@ echo "Setting General UI/UX defaults..."
 #   defaults write com.apple.dock minimize-to-application -bool true
 
 # Open default on my home folder
-  defaults write com.apple.finder NewWindowTargetPath -string "file://localhost${HOME}"
+  defaults write com.apple.finder NewWindowTargetPath -string "file://localhost/${HOME}"
 
 # # Increase window resize speed for Cocoa applications
 #   defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
