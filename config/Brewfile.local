@@ -9,17 +9,7 @@ tap "caskroom/cask"
 tap "universal-ctags/universal-ctags"
 
 # cask tools
-#cask "gpg-suite"            # we use MacGPG2, so this is not required
-#cask "keybase"             # secure comms
-
-# vpn - because security
-cask "tunnelbear"
-
-# Monitor your outgoing network connections
-# cask "little-snitch"
-
-# anti-virus - because even macs get viruses
-# cask "avira-antivirus"
+#cask "gpg-suite"            # we used to use MacGPG2, so this is commented out incase neede
 
 # Image manipulation
 brew "imagemagick"
@@ -29,10 +19,6 @@ brew "cmake"
 brew "python3"
 brew "gradle"
 brew "zsh"
-# brew "node"
-# brew "ruby-build"
-# brew "ruby"
-# brew "yarn"
 
 # should try these from a docker container
 brew "go"
@@ -47,8 +33,6 @@ brew "libpng"
 # Editors and IDEs
 # brew "vim"
 brew "vim", args: ['override-system-vi']
-# brew "macvim"
-brew "neovim"                     # switching to neovim for a modern version of vim
 
 # Free programming editors - uncomment the one that you want to install
 cask "visual-studio-code"
@@ -61,12 +45,11 @@ cask "jetbrains-toolbox"
 # comparision tool - commercial but definitely worth it
 cask "beyond-compare"
 
-# AEM development - install brackets, and eclipse
-# cask "brackets"
-# cask "eclipse-jee"
-
 # swagger codegenerator - only works with java 8
 brew "swagger-codegen"
+
+######################################
+## Mobile development 
 
 # cocoapods and the mac app for it
 brew "cocoapods"
@@ -74,41 +57,45 @@ cask "cocoapods-app"
 
 # Mobile development
 cask "android-studio"
-cask "genymotion"                   # VM for simulating devices - faster than the android version, but it is commercial
+#cask "genymotion"                   # VM for simulating devices - faster than the android version, but it is commercial
+######################################
+
 
 # A command line http client, like CURL, only more fun to use
 brew "httpie"
 
 # postgres auto-complete and syntax highlighting from the command line
-brew "pgcli"
+#brew "pgcli"
 
 # git
 #brew  "github"
 #brew "git-lfs"
 
-# Browsers
-cask "google-chrome"
-cask "firefox"
+# Browsers - should be installed with the new image from the tech bar
+#cask "google-chrome"
+#cask "firefox"
 
 # VM
 cask "vmware-fusion8"
 
 # useful utils for backing up
-cask "dropbox"
+# cask "dropbox"
 # cask "google-backup-and-sync"       # google drive for syncing
-cask "google-drive-file-stream"
+# cask "google-drive-file-stream"
 
-cask "kindle"
+# cask "kindle"
 
 cask "bettertouchtool"
-cask "balsamiq-mockups"
+# cask "balsamiq-mockups"
 
 # Command line search tools
-brew "pt"                           # the platinum searcher - supposedly faster than the silver searcher
+#brew "pt"                           # the platinum searcher - supposedly faster than the silver searcher
 #brew "ripgrep"                      # rip grep - written in rust and really fast
 #brew "sift"                         # sift written in go
-brew "fzf"                          # fuzzy finder - written in go
+#brew "fzf"                          # fuzzy finder - written in go
 brew "ack"                          # ack - search tool designed for code, faster than grep
+brew "the_silver_searcher"
+brew "ripgrep"
 
 # hide menu items
 # cask "vanilla"
@@ -120,7 +107,7 @@ cask "libreoffice"
 cask "spotify"
 
 # BBC iPlayer
-cask "bbc-iplayer-downloads"
+# cask "bbc-iplayer-downloads"
 
 # use an ipad as a second display - commercial
 cask "duet"
@@ -132,9 +119,9 @@ cask "soundflower"
 
 
 # the unarchiver - to unarchive...
-cask "the-unarchiver"
+# cask "the-unarchiver"
 
-cask "whatsapp"
+# cask "whatsapp"
 
 # UI for working with docker
 cask "kitematic"
@@ -142,16 +129,16 @@ cask "kitematic"
 # virtualbox - should be downloaded as a part of genymotion
 cask "virtualbox"
 
-# mas cli to install apps from app store
-brew "mas"
-mas "Affinity Photo", id: 824183456
-mas "BetterSnapTool", id: 417375580
-mas "Keynote", id: 409183694
-mas "Microsoft OneNote", id: 784801555
-mas "Notability", id: 736189492
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Pixelmator", id: 407963104
-mas "Pocket", id: 568494494
-mas "Trello", id: 1278508951
-mas "Xcode", id: 497799835
+# mas cli to install apps from app store - doesnt work with Mojave
+# brew "mas"
+# mas "Affinity Photo", id: 824183456
+# mas "BetterSnapTool", id: 417375580
+# mas "Keynote", id: 409183694
+# mas "Microsoft OneNote", id: 784801555
+# mas "Notability", id: 736189492
+# mas "Numbers", id: 409203825
+# mas "Pages", id: 409201541
+# mas "Pixelmator", id: 407963104
+# mas "Pocket", id: 568494494
+# mas "Trello", id: 1278508951
+# mas "Xcode", id: 497799835
