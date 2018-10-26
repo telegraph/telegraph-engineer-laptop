@@ -52,11 +52,11 @@ brew "swagger-codegen"
 ## Mobile development 
 
 # cocoapods and the mac app for it
-brew "cocoapods"
-cask "cocoapods-app"
+#brew "cocoapods"
+#cask "cocoapods-app"
 
 # Mobile development
-cask "android-studio"
+#cask "android-studio"
 #cask "genymotion"                   # VM for simulating devices - faster than the android version, but it is commercial
 ######################################
 
@@ -74,6 +74,7 @@ brew "httpie"
 # Browsers - should be installed with the new image from the tech bar
 #cask "google-chrome"
 #cask "firefox"
+cask "brave-browser"
 
 # VM
 cask "vmware-fusion8"
