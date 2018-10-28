@@ -26,11 +26,6 @@ else
   echo "Some items in Brewfile were not installed successfully."
 fi
 
-########################[ OH MY ZSH ]##########################################
-fancy_echo "Setup oh-my-zsh"
-   sh "$BIN_PATH/zsh.sh"
-
-
 ########################[ Github ]#############################################
 fancy_echo "Setup github"
    sh "$BIN_PATH/git_config.sh"
@@ -39,3 +34,8 @@ fancy_echo "Setup github"
 ########################[ VIM ]################################################
 fancy_echo "Setup vim"
    sh "$BIN_PATH/vim.sh"
+
+########################[ OH MY ZSH ]##########################################
+# done last so the other scripts run
+fancy_echo "Setup oh-my-zsh"
+   sh "$BIN_PATH/zsh.sh"
