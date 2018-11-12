@@ -82,6 +82,11 @@ echo "Setting General UI/UX defaults..."
 # Disable the "Are you sure you want to open this application?" dialog
   defaults write com.apple.LaunchServices LSQuarantine -bool false
 
+
+# Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
+  /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+ 
+
 # Reveal IP address, hostname, OS version, etc. when clicking the clock
 # in the login window
   sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
