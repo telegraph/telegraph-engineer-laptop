@@ -34,20 +34,6 @@ if [ -f "$SETTINGS" ]; then
 
   source "$SETTINGS"
 
-  # check to make sure the computer name etc should be updated
-  if [ ! $COMPUTER_NAME ]; then
-    echo "###### Using $COMPUTER_NAME for your computer name ######################"
-    echo "###### Using $HOST_NAME for your host name##### #########################"
-    echo "###### Using $LOCAL_HOST_NAME for your local host name ##################"
-    echo "###### Using $NET_BIOS_NAME for your net bios name ######################"
-    echo "###### Using $NET_BIOS_NAME for your timezone ###########################"
-
-    # Set computer name (as done via System Preferences → Sharing)
-    sudo scutil --set ComputerName $COMPUTER_NAME
-    sudo scutil --set HostName $HOST_NAME
-    sudo scutil --set LocalHostName $LOCAL_HOST_NAME
-    sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $NET_BIOS_NAME
-  fi
   
 fi
 ###############################################################################
