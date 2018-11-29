@@ -1,0 +1,19 @@
+# Start in the correct location - this is what you want to edit if you want to change where AEM and 
+# source code get installed to
+AEM_PROJECT_HOME="~/telegraph/aem-code"
+# AEM_PROJECT_HOME="/Users/alex/telegraph/aem-code"
+AEM_CORE="aem-core"
+AEM_STACK="aem64-stack"
+AEM_OOYALA="aem-ooyala"
+AEM_CODE="aem-core"
+
+# use these inthe scripts below so dont have to change the version in the future
+AEM_PUBLISH=aem-publish
+AEM_AUTHOR=aem-author
+
+
+# echo "AEM_PROJECT_HOME folder: $AEM_PROJECT_HOME"
+# echo "AEM_STACK folder: $AEM_STACK"
+
+# echo "AEM_PUBLISH folder: $AEM_PUBLISH"
+# echo "AEM_AUTHOR folder: $AEM_AUTHOR"
