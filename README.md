@@ -177,3 +177,5 @@ safely.
 1. Automate the install of Talisman without requiring user input.  As the script 
 is written by Thoughtbot, and their install script is used as is and requires 
 user interation, this is left for another more ambitious contributor.
+1. Consider adding "type" specific environment.  For example, have an AEM dev for 
+AEM dev tools, one for mobile specific dev tools, etc.
