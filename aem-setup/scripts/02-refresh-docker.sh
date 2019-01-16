@@ -16,16 +16,19 @@ else
 fi
 
 # If there is no 64 directory, then clone it
-if [ ! -d "$AEM_PROJECT_HOME/$AEM_STACK" ]; then
+cd "$AEM_PROJECT_HOME/$AEM_STACK"
+if [ $? = 1 ]; then
+  echo "Project folder exists"
+else
   # Step 3 - Clone Docker images and create volumes
   git clone ssh://git@bitbucket.aws.telegraph.co.uk:8080/docker/$AEM_STACK.git
 fi
 
-cd "$AEM_PROJECT_HOME/$AEM_STACK"
-if [ $? = 1 ]; then
-  echo "Cannot navigate to $AEM_PROJECT_HOME/$AEM_STACK folder. Exiting..."
-  exit 1
-fi
+# cd "$AEM_PROJECT_HOME/$AEM_STACK"
+# if [ $? = 1 ]; then
+#   echo "Cannot navigate to $AEM_PROJECT_HOME/$AEM_STACK folder. Exiting..."
+#   exit 1
+# fi
 
 # otherwise just update with the latest from github
 # refresh - even if we've just cloned it

@@ -1,6 +1,6 @@
 # Start in the correct location - this is what you want to edit if you want to change where AEM and 
 # source code get installed to
-AEM_PROJECT_HOME="~/telegraph/aem-code"
+AEM_PROJECT_HOME="$HOME/telegraph"
 # AEM_PROJECT_HOME="/Users/alex/telegraph/aem-code"
 AEM_CORE="aem-core"
 AEM_STACK="aem64-stack"
