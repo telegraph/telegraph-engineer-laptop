@@ -18,10 +18,11 @@ fi
 # If there is no 64 directory, then clone it
 cd "$AEM_PROJECT_HOME/$AEM_STACK"
 if [ $? = 1 ]; then
-  echo "Project folder exists"
-else
   # Step 3 - Clone Docker images and create volumes
+  echo "cloning git@bitbucket.aws.telegraph.co.uk:8080/docker/$AEM_STACK.git"
   git clone ssh://git@bitbucket.aws.telegraph.co.uk:8080/docker/$AEM_STACK.git
+else
+  echo "Project folder exists"
 fi
 
 # cd "$AEM_PROJECT_HOME/$AEM_STACK"
