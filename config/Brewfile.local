@@ -130,6 +130,9 @@ cask "kitematic"
 # virtualbox - should be downloaded as a part of genymotion
 cask "virtualbox"
 
+# postman is now an app, and will be deprecated/removed from chrome apps store
+cask "postman"
+
 # mas cli to install apps from app store - doesnt work with Mojave
 # brew "mas"
 # mas "Affinity Photo", id: 824183456
