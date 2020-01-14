@@ -107,7 +107,7 @@ Git and GitHub tools:
 
 Programming languages, package managers, and configuration:
 
-* [Java]: latest version of Java
+* [Java]: JDK 8
 * [Maven]: latest version of Maven
 
 Development tools, IDEs and text editors
