@@ -89,23 +89,6 @@ fi
 # check if there is a gitignore_global in the users home directory, and ignore
 # if it has been previously setup, otherwise setup some sensible defaults
 if [ -f "~/.gitignore_global" ]; then
-  fancy_echo "Setting up a senisble .gitignore_global.  Edit it as needed ..."
+  fancy_echo "Setting up a sensible .gitignore_global.  Edit it as needed ..."
   cp "${CONFIG_PATH}/gitignore_global" "$HOME/.gitignore_global"
 fi
-
-
-# Install Talisman, from Throughbot.  Adds a git hook to validate a change set 
-# to be pushed to a git repo, such as SSH keys, auth tokens, private keys etc.  
-# This is barebones install at the moment, but could be customised
-# Talisman is added as a git hook to all repos, so added to git-templates
-# Check to make sure there isnt already a pre-push hook
-fancy_echo "Installing Talisman as a pre-commit hook"
-if [ ! -f "$HOME/.git-templates/hooks/pre-push" ]; then 
-  curl https://thoughtworks.github.io/talisman/install.sh > "$HOME/install-talisman.sh"
-  # The talisman script checks the local .git/hooks repo first to see if it is 
-  # installed.  Force the check to run from the users home folder, but CD'ing to it
-  cd $HOME
-  chmod +x install-talisman.sh
-  ./install-talisman.sh
-  rm install-talisman.sh
-fi 
