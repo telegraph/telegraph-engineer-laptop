@@ -251,7 +251,7 @@ echo "Setting General UI/UX defaults..."
   defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
 # Show the ~/Library folder
-  chflags nohidden ~/Library
+  chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
   chflags nohidden /Library
 
 # Show the /Volumes folder
