@@ -11,6 +11,17 @@ source "$PARENT_PATH/bin/functions.sh"
 
 fancy_echo $CONFIG_PATH
 
+# work out which version of mac os we are running needed 
+# as the HOMEBREW_PREFIX needs to be set differently 
+MAJOR_MAC_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1}')
+
+	# Set the install location for homebrew... otherwise use the default.
+if [ "$MAJOR_MAC_VERSION" == "10" ]; then
+  HOMEBREW_PREFIX="/usr/local"
+else
+  HOMEBREW_PREFIX="/opt/homebrew"
+fi
+
 # useful for updating zshrc without duplicating entries
 append_to_zshrc() {
   local text="$1" zshrc
@@ -44,8 +55,8 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     fancy_echo "Updating path for homebrew apps"
     append_to_zshrc '# recommended by brew doctor'
     # shellcheck disable=SC2016
-    append_to_zshrc 'export PATH="/usr/local/bin:$PATH"' 1
-    export PATH="/usr/local/bin:$PATH"
+    append_to_zshrc 'export PATH="$HOMEBREW_PREFIX/bin:$PATH"' 1
+    export PATH="$HOMEBREW_PREFIX/bin:$PATH"
   fi
 
 fi
