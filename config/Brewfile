@@ -1,54 +1,65 @@
-#casks - for extra funtionality
-tap "homebrew/bundle"
-tap "thoughtbot/formulae"
-tap "buo/cask-upgrade"                  # to upgrade all the apps installed by homebrew cask
-tap "homebrew/core"
-tap "homebrew/services"
-tap "caskroom/versions"                 # for java 1.8
-tap "caskroom/cask"
-tap "universal-ctags/universal-ctags"
+#casks - for extra functionality
+tap 'homebrew/bundle'                     # bundler for non ruby dependencies
+tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
+tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
+tap 'homebrew/bundle'
+tap 'homebrew/cask-versions'
 
-# Set applications directory
-cask_args appdir: "/Applications"
+# Command line utils
+brew 'coreutils'        # Those that come with macOS are outdated
+brew 'findutils'
+brew 'moreutils'
 
 # Unix tools
-brew "universal-ctags", args: ["HEAD"]
-brew "git"
-brew "openssl"
-brew "readline"     # Utilities that one needs....
-
-# GitHub
-brew "hub"
+brew 'ctags'
+brew 'cmake'
+brew 'diff-so-fancy'
+brew 'iftop'            # Display an interface's bandwidth usage
+brew 'gh'               # Github commandline: https://github.com/cli/cli
+brew 'gpg'
+brew 'git'              # latest version of git
+brew 'grep'
+brew 'htop'
+brew 'httpie'
+brew 'hub'              # GitHub commandline extensions: https://hub.github.com/
+brew 'jq'
+brew 'mas'              # Mac App Store manager to install mac apps from the store using commandline
+brew 'openssl'
+brew 'readline'         # Utilities that one needs....
+brew 'the_silver_searcher'
+brew 'vim'
+brew 'wget'
 
 # Programming language prerequisites and package managers
-brew "libyaml"              # should come after openssl
-brew "coreutils"
-
-# we're an aws shop...
-brew "awscli"
-
-# need the latest version of java and maven
-# specify java8 
-cask "java8"  unless system "/usr/libexec/java_home --failfast"
-brew "maven"
+brew 'libtool'          # asdf dependency
+brew 'libxslt'          # asdf dependency
+brew 'libyaml'          # asdf - should come after openssl
 
 # development tools
-# cask "sublime-text"     # programming editor
-# cask "intellij-idea"    # manage jetbrains IDEs with their toolbox
-cask "sourcetree"       # Git client
-cask "docker"           # docker - containerise all the things
-cask "kitematic"        # UI for working with docker
-cask "iterm2"           # item - terminal alternative
-cask "mysqlworkbench"   # mysql work bench
-cask "sequel-pro"       # ui for database management
-cask "postman"          # Postman - for API development and testing
+brew 'go'               # needed for docker, and other tools
+brew 'go-md2man'        # needed for docker
+brew 'python3'
 
-# video viewer
-cask "vlc"
+# apps
+cask 'docker'           # docker - containerise all the things
+cask "gpg-suite"        # for encryption - do we need this?
+cask 'iterm2'           # item - terminal alternative
+cask 'intellij-idea'    # IntelliJ professional - licence required
+cask 'postman'          # Postman - for API development and testing
+cask 'slack'            # Slack - for comms
+cask 'stats'		        # Useful stats at a glance from the menu 
+cask 'visual-studio-code' # Excellent text editor / ide with a load of plugins
 
-# slack
-cask "slack"
+# browsers
+cask 'firefox'
+cask 'google-chrome'
 
-# window management from the keyvoard
-cask "spectacle"
+# Quicklook
+cask 'qlmarkdown'
+cask 'quicklook-json'
+cask 'quicklook-csv'
+cask 'qlimagesize'
+cask 'qlvideo'
 
+# GCP command line tools
+cask 'google-cloud-sdk'
