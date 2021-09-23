@@ -1,14 +1,14 @@
 # mac app store command line interface
 brew "mas"
 
-mas id: 824183456       # "Affinity Photo"
-mas id: 417375580       # "BetterSnapTool"
-mas id: 409183694       # "Keynote"
-mas id: 784801555       # "Microsoft OneNote"
-mas id: 736189492       # "Notability"
-mas id: 409203825       # "Numbers"
-mas id: 409201541       # "Pages"
-mas id: 407963104       # "Pixelmator"
-mas id: 568494494       # "Pocket"
-mas id: 1278508951      # "Trello"
-mas id: 497799835       # "Xcode"
+############################################## Apple App Store Apps ###########################
+# mas cli to install apps from app store
+# mas list -> gives a list of all installed apps and product key
+# mas upgrade -> upgrades all installed apps
+# mas 'Keynote', id: 409183694
+# mas 'Microsoft OneNote', id: 784801555
+# mas 'Notability', id: 736189492
+# mas 'Numbers', id: 409203825
+# mas 'Pages', id: 409201541
+# mas 'Trello', id: 1278508951
+# mas 'Xcode', id: 497799835

@@ -159,13 +159,8 @@ The example file provides the following
 [ASDF]: https://github.com/asdf-vm/asdf
 [Yarn]: https://yarnpkg.com/en/
 
-It should take less than 15 minutes to install (depends on your machine).
+It should take about 90 minutes to install (depends on your machine and internet connection).
 
-## Talisman prepush hook
-Talisman validates the outgoing changeset for things that look suspicious - such 
-as authorization tokens and private keys.  
-This is installed after git is added bia homebrew and requires user interaction.
-Please select (Y)es when prompted.  
 
 ## To Do Improvements
 1. Change the install to require curl to install the basic script rather than
@@ -174,8 +169,5 @@ user wanted them - a good reason to the script and localisations can be re-run
 safely.
 1. Add some CI and testing - this cannot be run in a Docker container as it is
  mac specific.
-1. Automate the install of Talisman without requiring user input.  As the script 
-is written by Thoughtbot, and their install script is used as is and requires 
-user interation, this is left for another more ambitious contributor.
 1. Consider adding "type" specific environment.  For example, have an AEM dev for 
 AEM dev tools, one for mobile specific dev tools, etc.

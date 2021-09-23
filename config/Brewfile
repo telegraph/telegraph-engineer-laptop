@@ -63,3 +63,15 @@ cask 'qlvideo'
 
 # GCP command line tools
 cask 'google-cloud-sdk'
+
+# for work
+#cask 'google-drive-file-stream'
+
+
+
+
+
+
+
+
+
