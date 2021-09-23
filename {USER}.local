@@ -7,18 +7,20 @@ SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
 PARENT_PATH=`dirname "$SCRIPT_PATH"`
 CONFIG_PATH="$SCRIPT_PATH/config"
 BIN_PATH="$SCRIPT_PATH/bin"
+BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
 # set some vars to references from one place
 FUNCTIONS="$BIN_PATH/functions.sh"
-BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
 
-# import the functions
+echo "Brewfile local = $BREWFILE_LOCAL"
+
+# import useful functions
 source "$FUNCTIONS"
 
 echo "Adding apps and preferences from $USER.local"
 
 ########################[ User specific apps ]#################################
-fancy_echo "Installing user specific apps from Brewfile.local"
+echo "Installing user specific apps from Brewfile.local"
 # generic apps for all engineers
 if brew bundle --file="$BREWFILE_LOCAL"; then
   echo "All items in Brewfile were installed successfully."
@@ -27,15 +29,63 @@ else
 fi
 
 ########################[ Github ]#############################################
-fancy_echo "Setup github"
-   sh "$BIN_PATH/git_config.sh"
+echo "Setup github"
+sh "$BIN_PATH/git_config.sh"
 
+# ########################[ VIM ]################################################
+echo "Setup vim"
+sh "$BIN_PATH/vim.sh"
 
-########################[ VIM ]################################################
-fancy_echo "Setup vim"
-   sh "$BIN_PATH/vim.sh"
+########################[ osx customisations ]#################################
+# run anything from the user local file
+echo "Running OSX customisations"
+if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
+  if [ -f "$HOME/.osx-customisations-run" ]; then
+    echo "Have already run the customisations - skipping"
+  else
+    echo "Running your customizations from osx-customisations.sh ..."
+    # shellcheck disable=SC1090
+    . "$BIN_PATH/osx-customisations.sh"
+    touch "$HOME/.osx-customisations-run"
+  fi
+fi
+
+########################[ asdf vm for ruby etc ]###############################
+echo "Setup ruby and node"
+sh "$BIN_PATH/asdfvm.sh"
+
+###############################[ hosts customisations ]########################
+# Block ads and other junk at the network level.
+# echo "Updating hosts file"
+# git clone https://github.com/amscad/hosts.git ~/hosts
+# cd ~/hosts && python updateHostsFile.py
+
 
 ########################[ OH MY ZSH ]##########################################
-# done last so the other scripts run
-fancy_echo "Setup oh-my-zsh"
-   sh "$BIN_PATH/zsh.sh"
+# move change to using zsh to the end to allow the script to complete
+echo "Setup oh-my-zsh"
+sh "$BIN_PATH/zsh.sh"
+
+########################[ asdf vm for ruby etc ]###############################
+#echo "Setup ruby, node, java, gradle, and maven"
+#	sh "$BIN_PATH/asdfvm.sh"
+#echo "Adding ability to switch JVM version to .zshrc file"
+#  # https://stackoverflow.com/questions/52524112/how-do-i-install-java-on-mac-osx-allowing-version-switching/52524114#52524114
+#  append_to_zshrc "export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)" 1
+#  append_to_zshrc "export JAVA_11_HOME=$(/usr/libexec/java_home -v11)" 1
+#  append_to_zshrc "export JAVA_14_HOME=$(/usr/libexec/java_home -v14)" 1
+
+#  append_to_zshrc "alias java8='export JAVA_HOME=$JAVA_8_HOME'" 1
+#  append_to_zshrc "alias java11='export JAVA_HOME=$JAVA_11_HOME'" 1
+#  append_to_zshrc "alias java14='export JAVA_HOME=$JAVA_14_HOME'" 1
+
+#  # default to Java 11
+#  java11
+
+
+########################[ OSX Customisations ]#################################
+# if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
+# echo "Customising OSX... (inspired by https://github.com/mathiasbynens/dotfiles)"
+# 	# shellcheck disable=SC1090
+#  	sh "$BIN_PATH/osx-customisations.sh"
+# fi
