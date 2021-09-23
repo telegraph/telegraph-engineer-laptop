@@ -2,7 +2,7 @@
 tap 'homebrew/bundle'                     # bundler for non ruby dependencies
 tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
 tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
-tap 'homebrew/bundle'
+
 tap 'homebrew/cask-versions'
 
 ############################################## Apps #############################################
