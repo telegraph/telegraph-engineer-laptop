@@ -51,7 +51,8 @@ Clone the repo to a location on your machine
 	git clone git://github.com/telegraph/telegraph-engineer-laptop.git ~/laptop 
 	cd ~/laptop 
 
-Rename (or copy) {USER}.local to *YOUR* user name. ie. bobs.local
+Rename (or copy) {USER}.local to *YOUR* user name. ie. If your name is bob smith and
+your domain name to login to your laptop is bobs, rename {USER}.local to bobs.local
       
       mv {USER}.local bobs.local
       
