@@ -81,11 +81,3 @@ sh "$BIN_PATH/zsh.sh"
 
 #  # default to Java 11
 #  java11
-
-
-########################[ OSX Customisations ]#################################
-# if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
-# echo "Customising OSX... (inspired by https://github.com/mathiasbynens/dotfiles)"
-# 	# shellcheck disable=SC1090
-#  	sh "$BIN_PATH/osx-customisations.sh"
-# fi
