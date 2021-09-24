@@ -26,7 +26,6 @@ brew 'jq'
 brew 'mas'              # Mac App Store manager to install mac apps from the store using commandline
 brew 'openssl'
 brew 'readline'         # Utilities that one needs....
-brew 'the_silver_searcher'
 brew 'vim'
 brew 'wget'
 
@@ -47,19 +46,13 @@ cask 'iterm2'           # item - terminal alternative
 cask 'intellij-idea'    # IntelliJ professional - licence required
 cask 'postman'          # Postman - for API development and testing
 cask 'slack'            # Slack - for comms
-cask 'stats'		        # Useful stats at a glance from the menu 
+# cask 'stats'		        # Useful stats at a glance from the menu 
 cask 'visual-studio-code' # Excellent text editor / ide with a load of plugins
 
-# browsers
-cask 'firefox'
-cask 'google-chrome'
+# browsers - may be part of the default build
+# cask 'firefox'
+# cask 'google-chrome'
 
-# Quicklook
-cask 'qlmarkdown'
-cask 'quicklook-json'
-cask 'quicklook-csv'
-cask 'qlimagesize'
-cask 'qlvideo'
 
 # GCP command line tools
 cask 'google-cloud-sdk'
