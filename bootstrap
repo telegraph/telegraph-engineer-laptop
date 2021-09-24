@@ -4,21 +4,13 @@ START_TIME=$(date +"%T")
 
 # Get the some path - used to include other files 
 SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-PARENT_PATH=`dirname "$SCRIPT_PATH"`
 CONFIG_PATH="$SCRIPT_PATH/config"
-BIN_PATH="$SCRIPT_PATH/bin"
 BREWFILE="$CONFIG_PATH/Brewfile"
-
-# set some vars to references from one place
-FUNCTIONS="$BIN_PATH/functions.sh"
 
 # work out which version of mac os we are running
 MAJOR_MAC_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
 echo "Running on $MAJOR_MAC_VERSION"
-
-# import the functions
-source "$FUNCTIONS"
 
 # shellcheck disable=SC2154
 # Print out the failure when exiting the script
@@ -45,100 +37,57 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 RUNNING_SYSTEM=`uname -s`
 
 # We're on a Mac, let's install and setup using homebrew.
-if [ "$RUNNING_SYSTEM" == "Darwin" ]
-then
+if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
 
 ########################[ Updating Mac OS ]####################################
 # Update mac software
-	echo "Updating mac os"
-#		sudo softwareupdate -i -a
+	echo "######################## 0. Updating mac os ########################"
+	sudo softwareupdate -i -a
 
 ########################[ Command line xcode ]#################################
-	echo "Install Apple command line tools"
+	echo "################ 1. Install Apple command line tools ################"
 	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
 	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
 		xcode-select --install
 		echo "Commandline tools not found where expected, trying anyway"
 	fi
 
-echo "############### 0 ####################"
-
 ########################[ Check homebrew is installed ]########################
-	echo "Using homebrew to install software "
+	echo "############### 2. Using homebrew to install software ###############"
 
 	if test ! "$(command -v brew)"; then
-	  echo "Install Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+		echo "Install Homebrew"
+    	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 	else
-	  if [[ -z "${CI}" ]]; then
-	    echo "Update Homebrew"
-	    brew update
-	    brew upgrade
-	    brew doctor
-	  fi
+		if [[ -z "${CI}" ]]; then
+			echo "Update Homebrew"
+			brew update
+			brew upgrade
+			brew doctor
+		fi
 	fi
 
 ########################[ Install homebrew apps ]##############################
-echo "############### 1 ####################"
 
-	echo "Updating Homebrew formulae ..."
+	echo "################### 3. Updating Homebrew formulae ###################"
 	brew update --force 					 # https://github.com/Homebrew/brew/issues/1151
 	echo "Updated forcefully"
 
-echo "############### 2 ####################"
 	echo "Installing from brewfile"
-  brew bundle --file "$BREWFILE"
+  	brew bundle --file "$BREWFILE"
 
-echo "############### 3 ####################"
-
-########################[ OSX Customisations ]#################################
-	# if [ -f "$BIN_PATH/osx-customisations.sh" ]; then
-	# echo "Customising OSX... (inspired by https://github.com/mathiasbynens/dotfiles)"
-	# 	# shellcheck disable=SC1090
-	#  	sh "$BIN_PATH/osx-customisations.sh"
-	# fi
-
-###############################################################################
-########################[ Linux Customisations ]###############################
-elif [ "$RUNNING_SYSTEM" == "Linux" ]
-then
-	echo "Install for Linux"
-	sh linux.sh
-else
-	fail "Unfortunately your system is not currently supported with this script"
+########################[ Run user customisations ]############################
+# run anything from the user local file,
+	if [ -f "$USER.local" ]; then
+		# shellcheck disable=SC1090				# not sure if still needed
+		sh "$USER.local"
+	fi
+else 
+	echo "Unfortunately your system is not currently supported with this script"
 fi
-
-
-########################[ Github ]#############################################
-echo "Setup github"
-    sh "$BIN_PATH/git_config.sh"
-
-
-########################[ OH MY ZSH ]##########################################
-# move change to using zsh to the end to allow the script to complete
-echo "Setup oh-my-zsh"
-	sh "$BIN_PATH/zsh.sh"
-
-
-########################[ asdf vm for ruby etc ]###############################
-#echo "Setup ruby, node, java, gradle, and maven"
-#	sh "$BIN_PATH/asdfvm.sh"
-#echo "Adding ability to switch JVM version to .zshrc file"
-#  # https://stackoverflow.com/questions/52524112/how-do-i-install-java-on-mac-osx-allowing-version-switching/52524114#52524114
-#  append_to_zshrc "export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)" 1
-#  append_to_zshrc "export JAVA_11_HOME=$(/usr/libexec/java_home -v11)" 1
-#  append_to_zshrc "export JAVA_14_HOME=$(/usr/libexec/java_home -v14)" 1
-
-#  append_to_zshrc "alias java8='export JAVA_HOME=$JAVA_8_HOME'" 1
-#  append_to_zshrc "alias java11='export JAVA_HOME=$JAVA_11_HOME'" 1
-#  append_to_zshrc "alias java14='export JAVA_HOME=$JAVA_14_HOME'" 1
-
-#  # default to Java 11
-#  java11
 
 echo "Cleanup"
 brew cleanup
-#rm -f -r /Library/Caches/Homebrew/*
 
 END_TIME=$(date +"%T")
 
