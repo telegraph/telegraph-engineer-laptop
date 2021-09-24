@@ -3,12 +3,11 @@ tap 'homebrew/bundle'                     # bundler for non ruby dependencies
 tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
 tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
 
-tap 'homebrew/cask-versions'
 
 ############################################## Apps #############################################
 # cask 'duet'                       # use an ipad as a second display - commercial, not usually needed due to sidecar built in to the mac
 # cask 'hiddenbar'                  # hide selected menu items
-# cask 'spectacle'                    # window management from the keyboard
+# cask 'spectacle'                  # window management from the keyboard
 # cask 'spotify'                    # music
 # cask 'whatsapp'                   # Using whatsapp on your mac
 
@@ -29,10 +28,10 @@ tap 'homebrew/cask-versions'
 # brew 'pt'                           # the platinum searcher - supposedly faster than the silver searcher
 # brew 'ripgrep'                      # rip grep - written in rust and really fast
 # brew 'sift'                         # sift written in go
-# brew 'the_silver_searcher'          # the silver searcher
+brew 'the_silver_searcher'          # the silver searcher
 
 # fancy diffs with git
-# brew 'diff-so-fancy'
+brew 'diff-so-fancy'
 
 # A command line http client, like CURL, only more fun to use
 # brew 'httpie'                       
@@ -42,12 +41,12 @@ tap 'homebrew/cask-versions'
 
 ############################################## Programming stuff ###############################
 # programming languages and suuport
-# brew 'python3'                      # Depends on if you want to manage your python3 install using asdf or brew
-# brew 'zsh'                          # zsh is now the default,
+brew 'python3'                      # Depends on if you want to manage your python3 install using asdf or brew
+brew 'zsh'                          # zsh is now the default,
 
 # Free programming editors - uncomment the one that you want to install
 # cask 'atom'
-# cask 'textmate'
+cask 'textmate'
 # cask 'visual-studio-code'
 # brew 'vim'
 
@@ -60,3 +59,11 @@ tap 'homebrew/cask-versions'
 
 
 
+# Quicklook
+# https://github.com/sindresorhus/quick-look-plugins
+brew 'highlight'
+cask 'qlmarkdown'
+cask 'quicklook-json'
+cask 'quicklook-csv'
+cask 'qlimagesize'
+cask 'qlvideo'
