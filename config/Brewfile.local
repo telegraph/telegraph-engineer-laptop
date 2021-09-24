@@ -8,7 +8,7 @@ tap 'homebrew/cask-versions'
 ############################################## Apps #############################################
 # cask 'duet'                       # use an ipad as a second display - commercial, not usually needed due to sidecar built in to the mac
 # cask 'hiddenbar'                  # hide selected menu items
-# cask 'spectacle'                    # window management from the keyvoard
+# cask 'spectacle'                    # window management from the keyboard
 # cask 'spotify'                    # music
 # cask 'whatsapp'                   # Using whatsapp on your mac
 
