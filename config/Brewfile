@@ -13,6 +13,7 @@ brew 'moreutils'
 # Unix tools
 brew 'ctags'
 brew 'cmake'
+brew 'make'             # installs 'gmake' - needed for building an aem docker image for m1
 brew 'diff-so-fancy'
 brew 'iftop'            # Display an interface's bandwidth usage
 brew 'gh'               # Github commandline: https://github.com/cli/cli
