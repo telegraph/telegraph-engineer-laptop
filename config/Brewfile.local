@@ -19,8 +19,6 @@ tap 'homebrew/core'                       # default tap installed - for linux us
 # cask 'libreoffice'
 
 
-
-
 ############################################## Command line tools ###############################
 # Command line search tools
 # brew 'ack'                          # ack - search tool designed for code, faster than grep
@@ -41,8 +39,8 @@ brew 'diff-so-fancy'
 
 ############################################## Programming stuff ###############################
 # programming languages and suuport
-brew 'python3'                      # Depends on if you want to manage your python3 install using asdf or brew
-brew 'zsh'                          # zsh is now the default,
+# brew 'python3'                      # Depends on if you want to manage your python3 install using asdf or brew
+# brew 'zsh'                          # zsh is now the default,
 
 # Free programming editors - uncomment the one that you want to install
 # cask 'atom'
@@ -56,7 +54,6 @@ cask 'textmate'
 
 # swagger codegenerator - needs java 11 on the path
 # brew 'swagger-codegen'
-
 
 
 # Quicklook
