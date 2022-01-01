@@ -3,14 +3,86 @@
 START_TIME=$(date +"%T")
 
 # Get the some path - used to include other files 
-SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+SCRIPT_PATH=$(dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")")
 CONFIG_PATH="$SCRIPT_PATH/config"
 BREWFILE="$CONFIG_PATH/Brewfile"
+
+abort() {
+  printf "%s\n" "$@"
+  exit 1
+}
+
+
+########################[ OS check ]###########################################
+# Do this upfront to avoid wasting the users time
+RUNNING_SYSTEM=$(uname -s)
+
+# Check we're on a Mac, if so install and setup using homebrew.
+if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
+
+	# now check if running on a M1 or intel machine
+	UNAME_MACHINE="$(/usr/bin/uname -m)"
+
+	if [[ "${UNAME_MACHINE}" == "arm64" ]]
+	then
+		# On ARM macOS, homebrew installs to /opt/homebrew
+		HOMEBREW_PREFIX="/opt/homebrew"
+		HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
+	else
+		# On Intel macOS, homebrew installs to /usr/local
+		HOMEBREW_PREFIX="/usr/local"
+		HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+	fi
+
+	# which shell are we targetng
+	case "${SHELL}" in
+		*/bash*)
+			if [[ -r "${HOME}/.bash_profile" ]]
+			then
+				shell_profile="${HOME}/.bash_profile"
+			else
+				shell_profile="${HOME}/.profile"
+			fi
+			;;
+		*/zsh*)
+			shell_profile="${HOME}/.zprofile"
+			;;
+		*)
+			shell_profile="${HOME}/.profile"
+			;;
+	esac
+
+fi
+
+if [[ "${UNAME_MACHINE}" == "arm64" ]]
+then
+	# update .zprofile for homebrew to work.  this will run every time 
+	# the shell is opened
+	zprofile_text="eval \"\$(${HOMEBREW_PREFIX}/bin/brew shellenv)\""
+  if ! grep -Fqs "$zprofile_text" "${shell_profile}"; then
+		printf "%s\n" "$zprofile_text" >> "${shell_profile}"
+  fi
+
+fi
+
+# not sure if this is needed, but need to setup the path before running 
+# homebrew, otherwise the script halts
+echo "########################################################################################"
+echo "Not setting path, will evaluate the shellenv"
+# export PATH="${HOMEBREW_PREFIX}/bin/brew:$PATH"
 
 # work out which version of mac os we are running
 MAJOR_MAC_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
-echo "Running on $MAJOR_MAC_VERSION"
+echo "########################################################################################"
+# mainly for info
+echo "You are running the ${UNAME_MACHINE} architecture"
+echo "Mac OS verion $MAJOR_MAC_VERSION"
+echo "Home brew will install to ${HOMEBREW_PREFIX}"
+echo "Home brew repo is ${HOMEBREW_REPOSITORY}"
+echo "The shell being used is ${shell_profile}"
+echo "Path is set to $PATH"
+echo "########################################################################################"
 
 # shellcheck disable=SC2154
 # Print out the failure when exiting the script
@@ -27,37 +99,38 @@ latest Max OS updates and to ensure permssions on homebrew are setup
 correctly.
 #########################################################################
 "
+
 # Ask for the administrator password upfront
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until the script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-########################[ INSTALL depending on OS ]############################
-RUNNING_SYSTEM=`uname -s`
+# ########################[ Updating Mac OS ]####################################
+# # Update mac software
+# echo "######################## 0. Updating mac os ########################"
+# 	# sudo softwareupdate -i -a
 
-# We're on a Mac, let's install and setup using homebrew.
-if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
+# ########################[ Command line xcode ]#################################
+# echo "################ 1. Install Apple command line tools ################"
+# 	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
+# 	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
+# 		xcode-select --install
+# 	fi
 
-########################[ Updating Mac OS ]####################################
-# Update mac software
-	echo "######################## 0. Updating mac os ########################"
-	sudo softwareupdate -i -a
-
-########################[ Command line xcode ]#################################
-	echo "################ 1. Install Apple command line tools ################"
-	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
-	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
-		xcode-select --install
-		echo "Commandline tools not found where expected, trying anyway"
-	fi
 
 ########################[ Check homebrew is installed ]########################
-	echo "############### 2. Using homebrew to install software ###############"
+echo "############### 2. Using homebrew to install software ###############"
 
 	if test ! "$(command -v brew)"; then
-		echo "Install Homebrew"
+		echo "########################################################################################"
+		echo "--------------- Install Homebrew ----------------------"
+		echo "PATH set to ${PATH}"
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		# export PATH="${HOMEBREW_PREFIX}/bin/brew:$PATH"
+		echo "--------------- Evaluating shellenv ---------------"
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+		echo "########################################################################################"
 	else
 		if [[ -z "${CI}" ]]; then
 			echo "Update Homebrew"
@@ -67,9 +140,9 @@ if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
 		fi
 	fi
 
-########################[ Install homebrew apps ]##############################
 
-	echo "################### 3. Updating Homebrew formulae ###################"
+########################[ Install homebrew apps ]##############################
+echo "################### 3. Updating Homebrew formulae ###################"
 	brew update --force 					 # https://github.com/Homebrew/brew/issues/1151
 	echo "Updated forcefully"
 
@@ -83,7 +156,7 @@ if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
 		sh "$USER.local"
 	fi
 else 
-	echo "Unfortunately your system is not currently supported with this script"
+	echo "This script is currently only supported on macOS."
 fi
 
 echo "Cleanup"
