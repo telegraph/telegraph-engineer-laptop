@@ -55,6 +55,9 @@ cask 'textmate'
 # swagger codegenerator - needs java 11 on the path
 # brew 'swagger-codegen'
 
+# Add asdf version manager to allow for managing sdks - allows for non java sdks
+brew 'asdf'
+
 
 # Quicklook
 # https://github.com/sindresorhus/quick-look-plugins
