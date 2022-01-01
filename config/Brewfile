@@ -54,18 +54,8 @@ cask 'visual-studio-code' # Excellent text editor / ide with a load of plugins
 # cask 'firefox'
 cask 'google-chrome'
 
-
 # GCP command line tools
 cask 'google-cloud-sdk'
 
 # for work
-#cask 'google-drive-file-stream'
-
-
-
-
-
-
-
-
-
+# cask 'google-drive-file-stream'
