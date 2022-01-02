@@ -18,6 +18,8 @@ tap 'homebrew/core'                       # default tap installed - for linux us
 # libreoffice - open source office suite
 # cask 'libreoffice'
 
+# notion - a personal wiki
+cask notion
 
 ############################################## Command line tools ###############################
 # Command line search tools
