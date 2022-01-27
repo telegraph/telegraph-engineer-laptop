@@ -2,15 +2,78 @@
 
 START_TIME=$(date +"%T")
 
-# Get the some path - used to include other files 
-SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
+# Get the some path - used to include other files
+SCRIPT_PATH=$(dirname "$(
+	cd "${0%/*}" 2>/dev/null
+	echo "$PWD"/"${0##*/}"
+)")
 CONFIG_PATH="$SCRIPT_PATH/config"
 BREWFILE="$CONFIG_PATH/Brewfile"
 
+abort() {
+	printf "%s\n" "$@"
+	exit 1
+}
+
+########################[ OS check ]#############################################
+# Do this upfront to avoid wasting the users time
+RUNNING_SYSTEM=$(uname -s)
+
+# Check we're on a Mac, if so install and setup using homebrew.
+if [ "$RUNNING_SYSTEM" != "Darwin" ]; then
+	abort "Homebrew is only supported on macOS and Linux."
+fi
+
+# now check if running on a M1 or intel machine
+UNAME_MACHINE="$(/usr/bin/uname -m)"
+
+if [[ "${UNAME_MACHINE}" == "arm64" ]]; then
+	# On ARM macOS, homebrew installs to /opt/homebrew
+	HOMEBREW_PREFIX="/opt/homebrew"
+	HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
+else
+	# On Intel macOS, homebrew installs to /usr/local
+	HOMEBREW_PREFIX="/usr/local"
+	HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+fi
+
+# which shell are we targetng
+case "${SHELL}" in
+*/bash*)
+	if [[ -r "${HOME}/.bash_profile" ]]; then
+		shell_profile="${HOME}/.bash_profile"
+	else
+		shell_profile="${HOME}/.profile"
+	fi
+	;;
+*/zsh*)
+	shell_profile="${HOME}/.zprofile"
+	;;
+*)
+	shell_profile="${HOME}/.profile"
+	;;
+esac
+
+if [[ "${UNAME_MACHINE}" == "arm64" ]]; then
+	# update .zprofile for homebrew to work.  this will run every time
+	# the shell is opened
+	zprofile_text="eval \"\$(${HOMEBREW_PREFIX}/bin/brew shellenv)\""
+	if ! grep -Fqs "$zprofile_text" "${shell_profile}"; then
+		printf "%s\n" "$zprofile_text" >>"${shell_profile}"
+	fi
+fi
+
+echo "##################[ Debug info ]########################################################"
 # work out which version of mac os we are running
 MAJOR_MAC_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
-echo "Running on $MAJOR_MAC_VERSION"
+echo "You are running on ${UNAME_MACHINE} architecture"
+echo "Mac OS verion $MAJOR_MAC_VERSION"
+echo "Home brew will install to ${HOMEBREW_PREFIX}"
+echo "Home brew repo is ${HOMEBREW_REPOSITORY}"
+echo "The shell being used is ${shell_profile}"
+echo "Path is set to $PATH"
+echo "########################################################################################"
 
 # shellcheck disable=SC2154
 # Print out the failure when exiting the script
@@ -19,71 +82,70 @@ trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 # exit if there is an error
 set -e
 
-
 echo "
-#########################################################################
-Prompting for your password as it is needed to install the 
-latest Max OS updates and to ensure permssions on homebrew are setup 
-correctly.
-#########################################################################
-"
+	#########################################################################
+	Prompting for your password as it is needed to install the 
+	latest Max OS updates and to ensure permssions on homebrew are setup 
+	correctly.
+	#########################################################################
+	"
+
 # Ask for the administrator password upfront
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
-########################[ INSTALL depending on OS ]############################
-RUNNING_SYSTEM=`uname -s`
-
-# We're on a Mac, let's install and setup using homebrew.
-if [ "$RUNNING_SYSTEM" == "Darwin" ]; then
+while true; do
+	sudo -n true
+	sleep 60
+	kill -0 "$$" || exit
+done 2>/dev/null &
 
 ########################[ Updating Mac OS ]####################################
 # Update mac software
-	echo "######################## 0. Updating mac os ########################"
-	sudo softwareupdate -i -a
+echo "######################## 0. Updating mac os ########################"
+sudo softwareupdate -i -a
+echo "Updated mac os software"
 
 ########################[ Command line xcode ]#################################
-	echo "################ 1. Install Apple command line tools ################"
-	COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
-	if [ ! -d "$COMMANDLINE_TOOLS" ]; then
-		xcode-select --install
-		echo "Commandline tools not found where expected, trying anyway"
-	fi
+echo "################ 1. Install Apple command line tools ################"
+COMMANDLINE_TOOLS="/Library/Developer/CommandLineTools"
+if [ ! -d "$COMMANDLINE_TOOLS" ]; then
+	xcode-select --install
+	echo "Installed Xcode command line tools"
+else
+	echo "Xcode command line tools already installed"
+fi
 
 ########################[ Check homebrew is installed ]########################
-	echo "############### 2. Using homebrew to install software ###############"
+echo "############### 2. Using homebrew to install software ###############"
 
-	if test ! "$(command -v brew)"; then
-		echo "Install Homebrew"
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	else
-		if [[ -z "${CI}" ]]; then
-			echo "Update Homebrew"
-			brew update
-			brew upgrade
-			brew doctor
-		fi
+if test ! "$(command -v brew)"; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	# Evaluating shellenv to set needed properties to get brew to run - borrowed from homebrew install
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+	# check not running on CI
+	if [[ -z "${CI}" ]]; then
+		echo "Update Homebrew"
+		brew update
+		brew upgrade
+		brew doctor
 	fi
+fi
 
 ########################[ Install homebrew apps ]##############################
+echo "################### 3. Updating Homebrew formulae ###################"
+brew update --force # https://github.com/Homebrew/brew/issues/1151
+echo "Updated homebrew forcefully"
 
-	echo "################### 3. Updating Homebrew formulae ###################"
-	brew update --force 					 # https://github.com/Homebrew/brew/issues/1151
-	echo "Updated forcefully"
-
-	echo "Installing from brewfile"
-  	brew bundle --file "$BREWFILE"
+echo "Installing from brewfile"
+brew bundle --file "$BREWFILE"
 
 ########################[ Run user customisations ]############################
 # run anything from the user local file,
-	if [ -f "$USER.local" ]; then
-		# shellcheck disable=SC1090				# not sure if still needed
-		sh "$USER.local"
-	fi
-else 
-	echo "Unfortunately your system is not currently supported with this script"
+if [ -f "$USER.local" ]; then
+	# shellcheck disable=SC1090				# not sure if still needed
+	sh "$USER.local"
 fi
 
 echo "Cleanup"

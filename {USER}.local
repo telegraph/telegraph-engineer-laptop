@@ -3,8 +3,8 @@
 #https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts
 
 # Get the some path - used to include other files 
-SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-PARENT_PATH=`dirname "$SCRIPT_PATH"`
+SCRIPT_PATH=$(dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")")
+PARENT_PATH=$(dirname "$SCRIPT_PATH")
 CONFIG_PATH="$SCRIPT_PATH/config"
 BIN_PATH="$SCRIPT_PATH/bin"
 BREWFILE_LOCAL="$CONFIG_PATH/Brewfile.local"
@@ -54,30 +54,8 @@ fi
 echo "Setup ruby and node"
 sh "$BIN_PATH/asdfvm.sh"
 
-###############################[ hosts customisations ]########################
-# Block ads and other junk at the network level.
-# echo "Updating hosts file"
-# git clone https://github.com/amscad/hosts.git ~/hosts
-# cd ~/hosts && python updateHostsFile.py
-
 
 ########################[ OH MY ZSH ]##########################################
 # move change to using zsh to the end to allow the script to complete
 echo "Setup oh-my-zsh"
 sh "$BIN_PATH/zsh.sh"
-
-########################[ asdf vm for ruby etc ]###############################
-#echo "Setup ruby, node, java, gradle, and maven"
-#	sh "$BIN_PATH/asdfvm.sh"
-#echo "Adding ability to switch JVM version to .zshrc file"
-#  # https://stackoverflow.com/questions/52524112/how-do-i-install-java-on-mac-osx-allowing-version-switching/52524114#52524114
-#  append_to_zshrc "export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)" 1
-#  append_to_zshrc "export JAVA_11_HOME=$(/usr/libexec/java_home -v11)" 1
-#  append_to_zshrc "export JAVA_14_HOME=$(/usr/libexec/java_home -v14)" 1
-
-#  append_to_zshrc "alias java8='export JAVA_HOME=$JAVA_8_HOME'" 1
-#  append_to_zshrc "alias java11='export JAVA_HOME=$JAVA_11_HOME'" 1
-#  append_to_zshrc "alias java14='export JAVA_HOME=$JAVA_14_HOME'" 1
-
-#  # default to Java 11
-#  java11

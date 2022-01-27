@@ -42,7 +42,7 @@ brew 'python3'
 
 # apps
 cask 'docker'           # docker - containerise all the things
-# cask "gpg-suite"        # for encryption - do we need this?
+# cask 'gpg-suite'        # for encryption - do we need this?
 cask 'iterm2'           # item - terminal alternative
 cask 'intellij-idea'    # IntelliJ professional - licence required
 cask 'postman'          # Postman - for API development and testing
@@ -52,20 +52,10 @@ cask 'visual-studio-code' # Excellent text editor / ide with a load of plugins
 
 # browsers - may be part of the default build
 # cask 'firefox'
-# cask 'google-chrome'
-
+cask 'google-chrome'
 
 # GCP command line tools
 cask 'google-cloud-sdk'
 
 # for work
-#cask 'google-drive-file-stream'
-
-
-
-
-
-
-
-
-
+# cask 'google-drive-file-stream'

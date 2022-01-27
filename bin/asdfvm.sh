@@ -3,8 +3,8 @@
 #https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts
 
 # Get the config path - used to include other files 
-SCRIPT_PATH=`dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"`
-PARENT_PATH=`dirname "$SCRIPT_PATH"`
+SCRIPT_PATH=$(dirname "$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")")
+PARENT_PATH=$(dirname "$SCRIPT_PATH")
 CONFIG_PATH="$PARENT_PATH/config"
 BIN_PATH="$PARENT_PATH/bin"
 source "$BIN_PATH/functions.sh"

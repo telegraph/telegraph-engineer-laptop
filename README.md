@@ -1,6 +1,7 @@
 # Laptop development setup script
-Sets up a newly imaged Mac for development, quickly using 
-common tools/apps used at the Telegraph
+Sets up a new Mac for development, quickly using common tools/apps used at 
+the Telegraph specifically targeting Apple M1, but should work ion an 
+Apple Intel machine
 
 
 ## CAUTION
