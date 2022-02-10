@@ -1,8 +1,16 @@
 # Laptop development setup script
 Sets up a new Mac for development, quickly using common tools/apps used at 
-the Telegraph specifically targeting Apple M1, but should work ion an 
+the Telegraph specifically targeting Apple M1, but should work on an 
 Apple Intel machine
 
+macOS does not include a native commandline tool to allow installing of
+packages.  There are many third party tools that serve this purpose, and 
+this script makes use of [homebrew](https://brew.sh/).  This allows for 
+setting up the machine to a common spec, while allowing the individual dev
+to customise the machine for their own purposes.
+
+Individual customisations should be added to the {USER}.local file as described
+below.
 
 ## CAUTION
 
@@ -57,6 +65,7 @@ Run the main script (make sure you read it first).  If you have a customisation 
 1. bootstrap - this will setup the default applications needed by most developers, using homebrew
 1. {USER}.local - this is where you add your customisations 
       *  Note - You do not need to add your own customisations.  
+1. config/Brewfile.local - this is where you add brews for apps you want installed 
  
 
 Please pay attention when running the scripts - you will be prompted for 
@@ -67,7 +76,8 @@ Please pay attention when running the scripts - you will be prompted for
 
 Currently supported and tested on:
 
-* macOS bigsur (intel)
+* macOS bigsur (M1/intel)
+* macOS monterey (M1)
 
 ## What it sets up
 
