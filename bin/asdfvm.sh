@@ -34,7 +34,8 @@ install_asdf_plugin "ruby" "https://github.com/asdf-vm/asdf-ruby.git"
 
 install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
 install_asdf_plugin "maven" "https://github.com/halcyon/asdf-maven"
-# install_asdf_plugin "python" "https://github.com/danhper/asdf-python"
+install_asdf_plugin "python" "https://github.com/danhper/asdf-python"
+
 install_asdf_language() {
   local language="$1"
   local version="$2"
@@ -75,8 +76,13 @@ install_asdf_language "java" "zulu-8.56.0.23"
 echo "Installing Java 11"
 
 install_asdf_language "java" "zulu-11.50.19"
-# echo "Installing Java 16"
 
-# install_asdf_language "java" "zulu-16.30.19"
+echo "Installing Java 17.34.19"
+
+install_asdf_language "java" "zulu-17.34.19"
+
 echo "Installing latest Maven"
 install_asdf_language "maven" "latest"
+
+echo "Installing latest python"
+install_asdf_language "python" "latest"
