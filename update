@@ -1,0 +1,8 @@
+# This is a script to update apps/software installed using Homebrew
+# configuration files are in the config folder
+# - main config is `Brewfile`
+# - local config is `Brewfile.local`
+# The local config is not supposed to be added to github
+
+brew bundle --file=config/Brewfile
+brew bundle --file=config/Brewfile.local
