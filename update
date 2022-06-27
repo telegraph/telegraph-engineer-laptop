@@ -3,6 +3,8 @@
 # - main config is `Brewfile`
 # - local config is `Brewfile.local`
 # The local config is not supposed to be added to github
-
 brew bundle --file=config/Brewfile
 brew bundle --file=config/Brewfile.local
+
+brew doctor
+brew upgrade
