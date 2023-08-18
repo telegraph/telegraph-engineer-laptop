@@ -35,6 +35,7 @@ install_asdf_plugin "ruby" "https://github.com/asdf-vm/asdf-ruby.git"
 install_asdf_plugin "java" "https://github.com/halcyon/asdf-java.git"
 install_asdf_plugin "maven" "https://github.com/halcyon/asdf-maven"
 install_asdf_plugin "python" "https://github.com/danhper/asdf-python"
+install_asdf_plugin "rust" "https://github.com/code-lever/asdf-rust.git"
 
 install_asdf_language() {
   local language="$1"
@@ -71,18 +72,21 @@ bash "npm install -g grunt"
 
 echo "Installing Java 8"
 
-install_asdf_language "java" "zulu-8.56.0.23"
+install_asdf_language "java" "latest:zulu-8"
 
 echo "Installing Java 11"
 
-install_asdf_language "java" "zulu-11.50.19"
+install_asdf_language "java" "latest:zulu-11"
 
-echo "Installing Java 17.34.19"
+echo "Installing Java 17"
 
-install_asdf_language "java" "zulu-17.34.19"
+install_asdf_language "java" "latest:zulu-17"
 
 echo "Installing latest Maven"
 install_asdf_language "maven" "latest"
 
 echo "Installing latest python"
 install_asdf_language "python" "latest"
+
+echo "Installing latest Rust"
+install_asdf_language "rust" "latest"
