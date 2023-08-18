@@ -1,7 +1,6 @@
 #casks - for extra functionality
 tap 'homebrew/bundle'                     # bundler for non ruby dependencies
 tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
-tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
 
 
 ############################################## Apps #############################################
@@ -12,15 +11,21 @@ tap 'homebrew/core'                       # default tap installed - for linux us
 # cask 'whatsapp'                   # Using whatsapp on your mac
 
 # browsers
-# cask 'firefox-developer-edition'
+cask 'firefox-developer-edition'
 # cask 'brave-browser' 
 
 # libreoffice - open source office suite
 # cask 'libreoffice'
 
-# notion - a personal wiki
-# cask notion
+cask 'jetbrains-toolbox'
+cask 'notion'                         # notion - a personal wiki
+cask 'objektiv'
 
+cask 'obsidian'
+
+cask 'bettertouchtool'
+cask 'insomnia'
+cask 'stats'		        # Useful stats at a glance from the menu 
 ############################################## Command line tools ###############################
 # Command line search tools
 # brew 'ack'                          # ack - search tool designed for code, faster than grep
@@ -49,6 +54,7 @@ brew 'diff-so-fancy'
 cask 'textmate'
 # cask 'visual-studio-code'
 # brew 'vim'
+brew 'nvim'
 
 # Non Free programming editors - licence needed to use - uncomment the one that you want to install
 # cask 'sublime-text2'
@@ -57,15 +63,29 @@ cask 'textmate'
 # swagger codegenerator - needs java 11 on the path
 # brew 'swagger-codegen'
 
+# ShellCheck is a GPLv3 tool that gives warnings and suggestions for bash/sh shell scripts
+brew 'shellcheck'
 # Add asdf version manager to allow for managing sdks - allows for non java sdks
 # brew 'asdf'
 
+# boop - a useful tool
+cask 'boop'
+cask 'google-drive'
 
 # Quicklook
 # https://github.com/sindresorhus/quick-look-plugins
 brew 'highlight'
-cask 'qlmarkdown'
+# cask 'qlmarkdown'
 cask 'quicklook-json'
 cask 'quicklook-csv'
 cask 'qlimagesize'
 cask 'qlvideo'
+
+# Charles proxy, for app debugging on a physical device
+cask 'charles'
+
+# Open source VM tool, only works on M1 macs
+cask 'utm' 
+
+# Open source tool to show key presses
+cask 'keycastr'
