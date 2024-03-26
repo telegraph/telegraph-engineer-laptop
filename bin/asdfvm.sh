@@ -71,16 +71,13 @@ bash "npm install -g grunt"
 
 
 echo "Installing Java 8"
-
-install_asdf_language "java" "zulu-8.56.0.23"
+install_asdf_language "java" "zulu-8.76.0.17"
 
 echo "Installing Java 11"
+#install_asdf_language "java" "zulu-11.70.15"
 
-install_asdf_language "java" "zulu-11.50.19"
-
-echo "Installing Java 17.34.19"
-
-install_asdf_language "java" "zulu-17.34.19"
+echo "Installing Java 22"
+install_asdf_language "java" "zulu-22.28.93"
 
 echo "Installing latest Maven"
 install_asdf_language "maven" "latest"
