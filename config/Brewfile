@@ -1,7 +1,7 @@
 #casks - for extra functionality
 tap 'homebrew/bundle'                     # bundler for non ruby dependencies
 tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
-tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
+#tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
 tap 'homebrew/bundle'
 tap 'homebrew/cask-versions'
 
@@ -38,7 +38,7 @@ brew 'libyaml'          # asdf - should come after openssl
 # development tools
 brew 'go'               # needed for docker, and other tools
 brew 'go-md2man'        # needed for docker
-brew 'python3'
+#brew 'python3'
 
 # apps
 cask 'docker'           # docker - containerise all the things

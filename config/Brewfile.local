@@ -1,7 +1,7 @@
 #casks - for extra functionality
 tap 'homebrew/bundle'                     # bundler for non ruby dependencies
 tap 'buo/cask-upgrade'                    # to upgrade all the apps installed by homebrew cask
-tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
+#tap 'homebrew/core'                       # default tap installed - for linux use 'homebrew/linux-brew/core'
 
 
 ############################################## Apps #############################################
@@ -52,13 +52,13 @@ cask 'textmate'
 
 # Non Free programming editors - licence needed to use - uncomment the one that you want to install
 # cask 'sublime-text2'
-# casl 'sublime-text'     
+# cask 'sublime-text'     
 
 # swagger codegenerator - needs java 11 on the path
 # brew 'swagger-codegen'
 
 # Add asdf version manager to allow for managing sdks - allows for non java sdks
-# brew 'asdf'
+brew 'asdf'
 
 
 # Quicklook
