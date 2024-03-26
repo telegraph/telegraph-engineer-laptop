@@ -102,9 +102,9 @@ done 2>/dev/null &
 
 ########################[ Updating Mac OS ]####################################
 # Update mac software
-echo "######################## 0. Updating mac os ########################"
-sudo softwareupdate -i -a
-echo "Updated mac os software"
+# echo "######################## 0. Updating mac os ########################"
+# sudo softwareupdate -i -a
+# echo "Updated mac os software"
 
 ########################[ Command line xcode ]#################################
 echo "################ 1. Install Apple command line tools ################"
