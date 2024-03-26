@@ -47,7 +47,7 @@ append_to_zshrc() {
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
 
 	fancy_echo "Setup oh-my-zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
   # add brew path to zshrc file, recommended by "brew doctor", but only if home brew 
   # is installed
